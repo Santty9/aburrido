@@ -54,11 +54,11 @@ describe('Language Provider', () => {
   it('should persist language in localStorage', () => {
     render(<LanguageProvider><TestComponent /></LanguageProvider>)
     fireEvent.click(screen.getByTestId('switch-es'))
-    expect(localStorage.getItem('aburrido_lang')).toBe('es')
+    expect(localStorage.getItem('keef_lang')).toBe('es')
   })
 
   it('should use stored language from localStorage', () => {
-    localStorage.setItem('aburrido_lang', 'es')
+    localStorage.setItem('keef_lang', 'es')
     render(<LanguageProvider><TestComponent /></LanguageProvider>)
     expect(screen.getByTestId('lang').textContent).toBe('es')
   })

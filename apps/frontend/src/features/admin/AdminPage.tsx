@@ -158,19 +158,19 @@ export function AdminPage() {
       created_at: new Date().toISOString(),
     }
     const all = [entry, ...changelogs]
-    localStorage.setItem('aburrido_changelogs', JSON.stringify(all))
+    localStorage.setItem('keef_changelogs', JSON.stringify(all))
     setChangelogs(all)
     setAnnouncement('')
     setShowAnnouncement(false)
   }
 
   const handleExportData = () => {
-    const raw = localStorage.getItem('aburrido_data')
-    const cl = localStorage.getItem('aburrido_changelogs')
-    const bg = localStorage.getItem('aburrido_badges')
+    const raw = localStorage.getItem('keef_data')
+    const cl = localStorage.getItem('keef_changelogs')
+    const bg = localStorage.getItem('keef_badges')
     const blob = new Blob([JSON.stringify({ data: raw ? JSON.parse(raw) : null, changelogs: cl ? JSON.parse(cl) : [], badges: bg ? JSON.parse(bg) : [] }, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a'); a.href = url; a.download = `aburrido-backup-${Date.now()}.json`; a.click()
+    const a = document.createElement('a'); a.href = url; a.download = `keef-backup-${Date.now()}.json`; a.click()
     URL.revokeObjectURL(url)
   }
 
@@ -182,9 +182,9 @@ export function AdminPage() {
       const text = await file.text()
       try {
         const json = JSON.parse(text)
-        if (json.data) localStorage.setItem('aburrido_data', JSON.stringify(json.data))
-        if (json.changelogs) localStorage.setItem('aburrido_changelogs', JSON.stringify(json.changelogs))
-        if (json.badges) localStorage.setItem('aburrido_badges', JSON.stringify(json.badges))
+        if (json.data) localStorage.setItem('keef_data', JSON.stringify(json.data))
+        if (json.changelogs) localStorage.setItem('keef_changelogs', JSON.stringify(json.changelogs))
+        if (json.badges) localStorage.setItem('keef_badges', JSON.stringify(json.badges))
         loadAll()
       } catch { alert('Archivo inválido') }
     }
@@ -195,7 +195,7 @@ export function AdminPage() {
   const clTypeColors: Record<ChangelogType, string> = { feature: 'from-emerald-500 to-teal-500', fix: 'from-rose-500 to-red-500', improvement: 'from-blue-500 to-cyan-500' }
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-64 gap-3"><div className="w-8 h-8 border-2 border-aburrido-500 border-t-transparent rounded-full animate-spin" /><span className="text-text-secondary text-sm">{t('common.loading')}</span></div>
+    return <div className="flex items-center justify-center h-64 gap-3"><div className="w-8 h-8 border-2 border-keef-500 border-t-transparent rounded-full animate-spin" /><span className="text-text-secondary text-sm">{t('common.loading')}</span></div>
   }
 
   const tabs = [
@@ -225,7 +225,7 @@ export function AdminPage() {
                 key={id}
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                  activeTab === id ? 'bg-aburrido-500 text-white shadow-lg' : 'text-text-secondary hover:text-white'
+                  activeTab === id ? 'bg-keef-500 text-white shadow-lg' : 'text-text-secondary hover:text-white'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" /> {label}
@@ -240,13 +240,13 @@ export function AdminPage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
               {[
                 { label: t('admin.overview.users'), value: stats?.total_users || 0, icon: Users, color: 'from-blue-500 to-cyan-500', desc: 'Cuentas registradas' },
-                { label: t('admin.overview.links'), value: stats?.total_links || 0, icon: Link2, color: 'from-aburrido-500 to-purple-500', desc: 'Links creados' },
+                { label: t('admin.overview.links'), value: stats?.total_links || 0, icon: Link2, color: 'from-keef-500 to-purple-500', desc: 'Links creados' },
                 { label: t('admin.overview.visits'), value: stats?.total_visits || 0, icon: Eye, color: 'from-emerald-500 to-teal-500', desc: 'Visitas totales' },
                 { label: t('admin.overview.badges'), value: stats?.total_badges || 0, icon: Sparkles, color: 'from-amber-500 to-yellow-500', desc: 'Insignias creadas' },
                 { label: t('admin.overview.changelogs'), value: stats?.total_changelogs || 0, icon: Newspaper, color: 'from-pink-500 to-rose-500', desc: 'Entradas publicadas' },
               ].map(({ label, value, icon: Icon, color, desc }, i) => (
                 <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                  <Card className="hover:border-aburrido-500/30 transition-all group">
+                  <Card className="hover:border-keef-500/30 transition-all group">
                     <div className={`w-10 h-10 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
                       <Icon className="w-5 h-5 text-white" />
                     </div>
@@ -272,7 +272,7 @@ export function AdminPage() {
                     <textarea
                       value={announcement}
                       onChange={(e) => setAnnouncement(e.target.value)}
-                      className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm focus:outline-none focus:border-aburrido-500 min-h-[100px] resize-none"
+                      className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm focus:outline-none focus:border-keef-500 min-h-[100px] resize-none"
                       placeholder="Escribe el mensaje del anuncio..."
                     />
                     <div className="flex gap-2">
@@ -297,19 +297,19 @@ export function AdminPage() {
                 <CardDescription>Tareas frecuentes de administración</CardDescription>
               </CardHeader>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button onClick={openBadgeCreate} className="p-4 rounded-xl bg-surface-3 border border-border hover:border-aburrido-500/50 transition-all text-center">
+                <button onClick={openBadgeCreate} className="p-4 rounded-xl bg-surface-3 border border-border hover:border-keef-500/50 transition-all text-center">
                   <Sparkles className="w-6 h-6 text-amber-400 mx-auto mb-2" />
                   <span className="text-xs font-medium">{t('admin.badges.new')}</span>
                 </button>
-                <button onClick={openClCreate} className="p-4 rounded-xl bg-surface-3 border border-border hover:border-aburrido-500/50 transition-all text-center">
+                <button onClick={openClCreate} className="p-4 rounded-xl bg-surface-3 border border-border hover:border-keef-500/50 transition-all text-center">
                   <Newspaper className="w-6 h-6 text-blue-400 mx-auto mb-2" />
                   <span className="text-xs font-medium">{t('admin.changelog.new')}</span>
                 </button>
-                <button onClick={handleExportData} className="p-4 rounded-xl bg-surface-3 border border-border hover:border-aburrido-500/50 transition-all text-center">
+                <button onClick={handleExportData} className="p-4 rounded-xl bg-surface-3 border border-border hover:border-keef-500/50 transition-all text-center">
                   <Download className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
                   <span className="text-xs font-medium">{t('admin.tools.export')}</span>
                 </button>
-                <button onClick={handleImportData} className="p-4 rounded-xl bg-surface-3 border border-border hover:border-aburrido-500/50 transition-all text-center">
+                <button onClick={handleImportData} className="p-4 rounded-xl bg-surface-3 border border-border hover:border-keef-500/50 transition-all text-center">
                   <Upload className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
                   <span className="text-xs font-medium">{t('admin.tools.import')}</span>
                 </button>
@@ -533,7 +533,7 @@ export function AdminPage() {
             <div className="flex flex-wrap gap-2">
               {emojis.map((emoji) => (
                 <button key={emoji} onClick={() => setBIcon(emoji)}
-                  className={`w-9 h-9 flex items-center justify-center rounded-lg border text-lg transition-all ${bIcon === emoji ? 'border-aburrido-500 bg-aburrido-500/20 scale-110' : 'border-border hover:border-aburrido-500/50'}`}>
+                  className={`w-9 h-9 flex items-center justify-center rounded-lg border text-lg transition-all ${bIcon === emoji ? 'border-keef-500 bg-keef-500/20 scale-110' : 'border-border hover:border-keef-500/50'}`}>
                   {emoji}
                 </button>
               ))}
@@ -586,7 +586,7 @@ export function AdminPage() {
           <div className="space-y-1.5">
             <label className="block text-sm font-medium text-text-secondary">{t('admin.changelog.content')}</label>
             <textarea
-              className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white placeholder:text-text-secondary/50 focus:outline-none focus:border-aburrido-500 min-h-[120px] resize-none font-mono text-sm"
+              className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white placeholder:text-text-secondary/50 focus:outline-none focus:border-keef-500 min-h-[120px] resize-none font-mono text-sm"
               placeholder="## Features&#10;- Item 1&#10;- Item 2"
               value={clContent}
               onChange={(e) => setClContent(e.target.value)}
@@ -599,7 +599,7 @@ export function AdminPage() {
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-text-secondary">{t('admin.changelog.type')}</label>
               <select value={clType} onChange={(e) => setClType(e.target.value as ChangelogType)}
-                className="w-full px-3 py-3 bg-surface-2 border border-border rounded-xl text-white focus:outline-none focus:border-aburrido-500 text-sm">
+                className="w-full px-3 py-3 bg-surface-2 border border-border rounded-xl text-white focus:outline-none focus:border-keef-500 text-sm">
                 <option value="feature">🚀 {t('admin.changelog.type.feature')}</option>
                 <option value="fix">🐛 {t('admin.changelog.type.fix')}</option>
                 <option value="improvement">⚡ {t('admin.changelog.type.improvement')}</option>

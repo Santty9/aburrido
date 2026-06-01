@@ -19,7 +19,7 @@ function Toggle({ label, checked, onChange, description }: { label: string; chec
         <span className="text-sm font-medium">{label}</span>
         {description && <p className="text-xs text-text-secondary mt-0.5">{description}</p>}
       </div>
-      <div className={`relative w-11 h-6 rounded-full transition-colors ${checked ? 'bg-aburrido-500' : 'bg-border'} shrink-0 ml-3`}>
+      <div className={`relative w-11 h-6 rounded-full transition-colors ${checked ? 'bg-keef-500' : 'bg-border'} shrink-0 ml-3`}>
         <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${checked ? 'translate-x-5' : ''}`} />
         <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="sr-only" />
       </div>
@@ -43,7 +43,7 @@ function ColorInput({ label, value, onChange }: { label: string; value: string; 
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm font-mono focus:outline-none focus:border-aburrido-500"
+        className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm font-mono focus:outline-none focus:border-keef-500"
       />
     </div>
   )
@@ -164,7 +164,7 @@ function ProfilePreview({ theme, profile }: { theme: ThemeConfig; profile: { use
             theme.title_font_size === 'md' ? 'text-xl sm:text-2xl' :
             theme.title_font_size === 'lg' ? 'text-2xl sm:text-3xl' :
             'text-3xl sm:text-4xl'
-          } font-black tracking-tight ${theme.title_style === 'gradient' ? 'bg-gradient-to-r from-white via-aburrido-300 to-white bg-clip-text text-transparent' : theme.title_style === 'shadow' ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]' : theme.title_style === 'outline' ? 'text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.8)]' : ''}`} style={theme.show_gradient_text ? { background: `linear-gradient(135deg, ${theme.accent_color}, #ffffff)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : {}}>{profile.display_name || profile.username}</h1>
+          } font-black tracking-tight ${theme.title_style === 'gradient' ? 'bg-gradient-to-r from-white via-keef-300 to-white bg-clip-text text-transparent' : theme.title_style === 'shadow' ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]' : theme.title_style === 'outline' ? 'text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.8)]' : ''}`} style={theme.show_gradient_text ? { background: `linear-gradient(135deg, ${theme.accent_color}, #ffffff)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : {}}>{profile.display_name || profile.username}</h1>
           {theme.show_bio && profile.bio && (
             <p className="text-xs leading-relaxed max-w-sm mx-auto" style={{ opacity: 0.75 }}>{profile.bio}</p>
           )}
@@ -254,7 +254,7 @@ function ProfilePreview({ theme, profile }: { theme: ThemeConfig; profile: { use
         {theme.show_brand_footer && (
           <div className="flex flex-col items-center gap-2 pt-2">
             <div className="flex items-center gap-2 text-[10px] font-medium tracking-wider uppercase" style={{ opacity: 0.3 }}>
-              <Heart className="w-3 h-3" /> Creado con Aburrido
+              <Heart className="w-3 h-3" /> Creado con Keef
             </div>
           </div>
         )}
@@ -363,7 +363,7 @@ export function PersonalizationPage() {
           </div>
           <div className="flex items-center gap-2">
             <a href={`/${profile.username}`} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-xl border border-border text-text-secondary hover:text-white hover:border-aburrido-500/50 transition-all">
+              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-xl border border-border text-text-secondary hover:text-white hover:border-keef-500/50 transition-all">
               <ExternalLink className="w-4 h-4" />
               Ver perfil
             </a>
@@ -388,7 +388,7 @@ export function PersonalizationPage() {
                   key={id}
                   onClick={() => setActiveTab(id)}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                    activeTab === id ? 'bg-aburrido-500 text-white shadow-lg' : 'text-text-secondary hover:text-white'
+                    activeTab === id ? 'bg-keef-500 text-white shadow-lg' : 'text-text-secondary hover:text-white'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -410,12 +410,12 @@ export function PersonalizationPage() {
                       key={key}
                       onClick={() => applyThemePreset(key)}
                       className={`relative p-4 rounded-xl border-2 transition-all duration-200 ${
-                        theme.type === key ? 'border-aburrido-500 scale-105 shadow-lg shadow-aburrido-500/20' : 'border-border hover:border-aburrido-500/50'
+                        theme.type === key ? 'border-keef-500 scale-105 shadow-lg shadow-keef-500/20' : 'border-border hover:border-keef-500/50'
                       }`}
                       style={{ background: config.background_type === 'gradient' ? config.background : config.background }}
                     >
                       {theme.type === key && (
-                        <div className="absolute top-1 right-1 w-5 h-5 bg-aburrido-500 rounded-full flex items-center justify-center shadow-lg">
+                        <div className="absolute top-1 right-1 w-5 h-5 bg-keef-500 rounded-full flex items-center justify-center shadow-lg">
                           <Check className="w-3 h-3 text-white" />
                         </div>
                       )}
@@ -442,8 +442,8 @@ export function PersonalizationPage() {
                           onClick={() => updateTheme('background_type', value)}
                           className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
                             theme.background_type === value
-                              ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400'
-                              : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                              ? 'border-keef-500 bg-keef-500/10 text-keef-400'
+                              : 'border-border text-text-secondary hover:border-keef-500/50'
                           }`}
                         >
                           <span>{icon}</span> {label}
@@ -462,7 +462,7 @@ export function PersonalizationPage() {
                           type="text"
                           value={theme.background}
                           onChange={(e) => updateTheme('background', e.target.value)}
-                          className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white font-mono text-sm focus:outline-none focus:border-aburrido-500"
+                          className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white font-mono text-sm focus:outline-none focus:border-keef-500"
                           placeholder="linear-gradient(135deg, #000, #purple)"
                         />
                         <div className="flex items-center gap-3">
@@ -472,7 +472,7 @@ export function PersonalizationPage() {
                             min={0} max={360}
                             value={theme.gradient_angle}
                             onChange={(e) => updateTheme('gradient_angle', Number(e.target.value))}
-                            className="flex-1 h-2 rounded-full appearance-none cursor-pointer accent-aburrido-500"
+                            className="flex-1 h-2 rounded-full appearance-none cursor-pointer accent-keef-500"
                           />
                           <span className="text-sm font-mono text-text-secondary w-10 text-right">{theme.gradient_angle}°</span>
                         </div>
@@ -511,7 +511,7 @@ export function PersonalizationPage() {
                           type="url"
                           value={theme.background_video_url || ''}
                           onChange={(e) => updateTheme('background_video_url', e.target.value || null)}
-                          className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm focus:outline-none focus:border-aburrido-500"
+                          className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm focus:outline-none focus:border-keef-500"
                           placeholder="https://example.com/background.mp4"
                         />
                         <Toggle
@@ -535,7 +535,7 @@ export function PersonalizationPage() {
                                 min={0} max={100}
                                 value={theme.overlay_opacity}
                                 onChange={(e) => updateTheme('overlay_opacity', Number(e.target.value))}
-                                className="w-full h-2 rounded-full appearance-none cursor-pointer accent-aburrido-500"
+                                className="w-full h-2 rounded-full appearance-none cursor-pointer accent-keef-500"
                               />
                               <div className="flex justify-between text-[10px] text-text-secondary">
                                 <span>Transparente</span>
@@ -551,7 +551,7 @@ export function PersonalizationPage() {
                                   className="w-10 h-10 rounded-xl border border-border cursor-pointer" />
                                 <input type="text" value={theme.overlay_color}
                                   onChange={(e) => updateTheme('overlay_color', e.target.value)}
-                                  className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm font-mono focus:outline-none focus:border-aburrido-500" />
+                                  className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm font-mono focus:outline-none focus:border-keef-500" />
                               </div>
                             </div>
                           </>
@@ -585,7 +585,7 @@ export function PersonalizationPage() {
                         key={value}
                         onClick={() => updateTheme('button_style', value)}
                         className={`p-4 rounded-xl border-2 text-center transition-all ${
-                          theme.button_style === value ? 'border-aburrido-500 bg-aburrido-500/10' : 'border-border hover:border-aburrido-500/50'
+                          theme.button_style === value ? 'border-keef-500 bg-keef-500/10' : 'border-border hover:border-keef-500/50'
                         }`}
                       >
                         <div className={`h-10 ${preview} bg-white/10 border border-white/20 flex items-center justify-center mb-2`}>
@@ -613,7 +613,7 @@ export function PersonalizationPage() {
                         key={font}
                         onClick={() => updateTheme('font', font)}
                         className={`px-4 py-3 rounded-xl border-2 text-sm transition-all ${
-                          theme.font === font ? 'border-aburrido-500 bg-aburrido-500/10' : 'border-border hover:border-aburrido-500/50'
+                          theme.font === font ? 'border-keef-500 bg-keef-500/10' : 'border-border hover:border-keef-500/50'
                         }`}
                         style={{ fontFamily: font }}
                       >
@@ -650,7 +650,7 @@ export function PersonalizationPage() {
                         {([['circle', '●'], ['rounded', '⬟'], ['square', '■']] as const).map(([value, icon]) => (
                           <button key={value} onClick={() => updateTheme('avatar_shape', value)}
                             className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                              theme.avatar_shape === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                              theme.avatar_shape === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                             }`}>
                             <span>{icon}</span> {value === 'circle' ? t('personalization.avatarShape.circle') : value === 'rounded' ? t('personalization.avatarShape.rounded') : t('personalization.avatarShape.square')}
                           </button>
@@ -663,7 +663,7 @@ export function PersonalizationPage() {
                         {([['thin', t('personalization.avatarBorder.thin')], ['medium', t('personalization.avatarBorder.medium')], ['thick', t('personalization.avatarBorder.thick')]] as const).map(([value, label]) => (
                           <button key={value} onClick={() => updateTheme('avatar_border_width', value)}
                             className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                              theme.avatar_border_width === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                              theme.avatar_border_width === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                             }`}>
                             {label}
                           </button>
@@ -676,7 +676,7 @@ export function PersonalizationPage() {
                         {([['sm', 'Pequeño'], ['md', 'Mediano'], ['lg', 'Grande']] as const).map(([value, label]) => (
                           <button key={value} onClick={() => updateTheme('avatar_size', value)}
                             className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                              theme.avatar_size === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                              theme.avatar_size === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                             }`}>
                             {label}
                           </button>
@@ -698,7 +698,7 @@ export function PersonalizationPage() {
                         {([['scale', t('personalization.linkEffect.scale')], ['glow', t('personalization.linkEffect.glow')], ['lift', t('personalization.linkEffect.lift')], ['none', t('personalization.linkEffect.none')]] as const).map(([value, label]) => (
                           <button key={value} onClick={() => updateTheme('link_hover_effect', value)}
                             className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                              theme.link_hover_effect === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                              theme.link_hover_effect === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                             }`}>
                             {label}
                           </button>
@@ -711,7 +711,7 @@ export function PersonalizationPage() {
                         {([['compact', t('personalization.linkSpacing.compact')], ['normal', t('personalization.linkSpacing.normal')], ['comfortable', t('personalization.linkSpacing.comfortable')]] as const).map(([value, label]) => (
                           <button key={value} onClick={() => updateTheme('link_spacing', value)}
                             className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                              theme.link_spacing === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                              theme.link_spacing === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                             }`}>
                             {label}
                           </button>
@@ -724,7 +724,7 @@ export function PersonalizationPage() {
                         {([['xs', 'Pequeño'], ['sm', 'Normal'], ['base', 'Grande']] as const).map(([value, label]) => (
                           <button key={value} onClick={() => updateTheme('link_font_size', value)}
                             className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                              theme.link_font_size === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                              theme.link_font_size === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                             }`}>
                             {label}
                           </button>
@@ -738,7 +738,7 @@ export function PersonalizationPage() {
                           {([['none', 'Ninguno'], ['light', 'Ligero'], ['medium', 'Medio'], ['strong', 'Fuerte']] as const).map(([value, label]) => (
                             <button key={value} onClick={() => updateTheme('glass_blur', value)}
                               className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                                theme.glass_blur === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                                theme.glass_blur === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                               }`}>
                               {label}
                             </button>
@@ -752,7 +752,7 @@ export function PersonalizationPage() {
                         {([['small', t('personalization.borderRadiusScale.small')], ['medium', t('personalization.borderRadiusScale.medium')], ['large', t('personalization.borderRadiusScale.large')]] as const).map(([value, label]) => (
                           <button key={value} onClick={() => updateTheme('border_radius_scale', value)}
                             className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                              theme.border_radius_scale === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                              theme.border_radius_scale === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                             }`}>
                             {label}
                           </button>
@@ -771,7 +771,7 @@ export function PersonalizationPage() {
                     {([['minimal', t('personalization.statsStyle.minimal')], ['detailed', t('personalization.statsStyle.detailed')], ['badges', t('personalization.statsStyle.badges')]] as const).map(([value, label]) => (
                       <button key={value} onClick={() => updateTheme('stats_style', value)}
                         className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                          theme.stats_style === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                          theme.stats_style === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                         }`}>
                         {label}
                       </button>
@@ -788,7 +788,7 @@ export function PersonalizationPage() {
                     {([['none', 'Sin borde'], ['thin', 'Borde sutil'], ['glow', 'Resplandor'], ['gradient', 'Degradado']] as const).map(([value, label]) => (
                       <button key={value} onClick={() => updateTheme('link_border_style', value)}
                         className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                          theme.link_border_style === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                          theme.link_border_style === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                         }`}>
                         {label}
                       </button>
@@ -805,7 +805,7 @@ export function PersonalizationPage() {
                     {([['none', 'Sin sombra'], ['soft', 'Suave'], ['medium', 'Media'], ['strong', 'Fuerte']] as const).map(([value, label]) => (
                       <button key={value} onClick={() => updateTheme('link_shadow', value)}
                         className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                          theme.link_shadow === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                          theme.link_shadow === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                         }`}>
                         {label}
                       </button>
@@ -827,7 +827,7 @@ export function PersonalizationPage() {
                     {([['slow', 'Lenta'], ['normal', 'Normal'], ['fast', 'Rápida']] as const).map(([value, label]) => (
                       <button key={value} onClick={() => updateTheme('animation_speed', value)}
                         className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                          theme.animation_speed === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                          theme.animation_speed === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                         }`}>
                         {label}
                       </button>
@@ -846,7 +846,7 @@ export function PersonalizationPage() {
                         <span className="text-sm font-medium">Activar cambio día/noche</span>
                         <p className="text-xs text-text-secondary">El perfil cambiará de tema según el horario</p>
                       </div>
-                      <div className={`relative w-11 h-6 rounded-full transition-colors ${theme.schedule.enabled ? 'bg-aburrido-500' : 'bg-border'} shrink-0 ml-3`}>
+                      <div className={`relative w-11 h-6 rounded-full transition-colors ${theme.schedule.enabled ? 'bg-keef-500' : 'bg-border'} shrink-0 ml-3`}>
                         <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${theme.schedule.enabled ? 'translate-x-5' : ''}`} />
                         <input type="checkbox" checked={theme.schedule.enabled}
                           onChange={(e) => updateTheme('schedule', { ...theme.schedule, enabled: e.target.checked })}
@@ -860,7 +860,7 @@ export function PersonalizationPage() {
                           <select
                             value={theme.schedule.day_theme || ''}
                             onChange={(e) => updateTheme('schedule', { ...theme.schedule, day_theme: (e.target.value || null) as ThemeType | null })}
-                            className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500"
+                            className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500"
                           >
                             <option value="">Sin cambiar</option>
                             {Object.keys(THEMES).map((key) => (
@@ -869,7 +869,7 @@ export function PersonalizationPage() {
                           </select>
                           <input type="time" value={theme.schedule.day_start}
                             onChange={(e) => updateTheme('schedule', { ...theme.schedule, day_start: e.target.value })}
-                            className="px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500"
+                            className="px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500"
                           />
                         </div>
                         <div className="flex items-center gap-3 p-3 bg-surface-3 rounded-xl">
@@ -877,7 +877,7 @@ export function PersonalizationPage() {
                           <select
                             value={theme.schedule.night_theme || ''}
                             onChange={(e) => updateTheme('schedule', { ...theme.schedule, night_theme: (e.target.value || null) as ThemeType | null })}
-                            className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500"
+                            className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500"
                           >
                             <option value="">Sin cambiar</option>
                             {Object.keys(THEMES).map((key) => (
@@ -886,7 +886,7 @@ export function PersonalizationPage() {
                           </select>
                           <input type="time" value={theme.schedule.night_start}
                             onChange={(e) => updateTheme('schedule', { ...theme.schedule, night_start: e.target.value })}
-                            className="px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500"
+                            className="px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500"
                           />
                         </div>
                       </>
@@ -915,7 +915,7 @@ export function PersonalizationPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <Sparkle className="w-5 h-5 text-aburrido-400" />
+                      <Sparkle className="w-5 h-5 text-keef-400" />
                       <CardTitle>Decoraciones de esquina</CardTitle>
                     </div>
                     <CardDescription>Agregá ornamentos en las esquinas del perfil</CardDescription>
@@ -924,7 +924,7 @@ export function PersonalizationPage() {
                     {([['none', 'Sin decoración'], ['dots', 'Puntos'], ['lines', 'Líneas'], ['ornate', 'Ornamental']] as const).map(([value, label]) => (
                       <button key={value} onClick={() => updateTheme('corner_decoration', value)}
                         className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                          theme.corner_decoration === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                          theme.corner_decoration === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                         }`}>
                         {label}
                       </button>
@@ -935,7 +935,7 @@ export function PersonalizationPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <Paintbrush className="w-5 h-5 text-aburrido-400" />
+                      <Paintbrush className="w-5 h-5 text-keef-400" />
                       <CardTitle>Estilo del título</CardTitle>
                     </div>
                     <CardDescription>Efecto visual del nombre principal</CardDescription>
@@ -944,7 +944,7 @@ export function PersonalizationPage() {
                     {([['normal', 'Normal'], ['gradient', 'Gradiente'], ['shadow', 'Sombra'], ['outline', 'Contorno']] as const).map(([value, label]) => (
                       <button key={value} onClick={() => updateTheme('title_style', value)}
                         className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                          theme.title_style === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                          theme.title_style === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                         }`}>
                         {label}
                       </button>
@@ -963,7 +963,7 @@ export function PersonalizationPage() {
                         {([['sm', 'Chico'], ['md', 'Mediano'], ['lg', 'Grande'], ['xl', 'Extra']] as const).map(([value, label]) => (
                           <button key={value} onClick={() => updateTheme('title_font_size', value)}
                             className={`flex-1 px-3 py-2 rounded-xl border-2 text-xs font-medium transition-all ${
-                              theme.title_font_size === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                              theme.title_font_size === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                             }`}>
                             {label}
                           </button>
@@ -976,7 +976,7 @@ export function PersonalizationPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-aburrido-400" />
+                      <Sparkles className="w-5 h-5 text-keef-400" />
                       <CardTitle>Animación de entrada</CardTitle>
                     </div>
                     <CardDescription>Cómo aparece el contenido al cargar el perfil</CardDescription>
@@ -985,7 +985,7 @@ export function PersonalizationPage() {
                     {([['fade', 'Desvanecer'], ['slide-up', 'Deslizar'], ['zoom', 'Zoom'], ['none', 'Ninguna']] as const).map(([value, label]) => (
                       <button key={value} onClick={() => updateTheme('entrance_animation', value)}
                         className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                          theme.entrance_animation === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                          theme.entrance_animation === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                         }`}>
                         {label}
                       </button>
@@ -996,7 +996,7 @@ export function PersonalizationPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-aburrido-400" />
+                      <Zap className="w-5 h-5 text-keef-400" />
                       <CardTitle>Intensidad de brillo</CardTitle>
                     </div>
                     <CardDescription>Qué tanto brillan los elementos al hacer hover</CardDescription>
@@ -1005,7 +1005,7 @@ export function PersonalizationPage() {
                     {([['subtle', 'Sutil'], ['normal', 'Normal'], ['strong', 'Fuerte']] as const).map(([value, label]) => (
                       <button key={value} onClick={() => updateTheme('glow_intensity', value)}
                         className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                          theme.glow_intensity === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                          theme.glow_intensity === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                         }`}>
                         {label}
                       </button>
@@ -1016,7 +1016,7 @@ export function PersonalizationPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <Heart className="w-5 h-5 text-aburrido-400" />
+                      <Heart className="w-5 h-5 text-keef-400" />
                       <CardTitle>Insignia de verificación</CardTitle>
                     </div>
                     <CardDescription>Estilo del badge de verificado</CardDescription>
@@ -1025,7 +1025,7 @@ export function PersonalizationPage() {
                     {([['standard', 'Estándar'], ['glow', 'Brillante'], ['minimal', 'Minimal'], ['none', 'Oculto']] as const).map(([value, label]) => (
                       <button key={value} onClick={() => updateTheme('badge_style', value)}
                         className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                          theme.badge_style === value ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400' : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                          theme.badge_style === value ? 'border-keef-500 bg-keef-500/10 text-keef-400' : 'border-border text-text-secondary hover:border-keef-500/50'
                         }`}>
                         {label}
                       </button>
@@ -1036,7 +1036,7 @@ export function PersonalizationPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <ExternalLink className="w-5 h-5 text-aburrido-400" />
+                      <ExternalLink className="w-5 h-5 text-keef-400" />
                       <CardTitle>Vista previa de links</CardTitle>
                     </div>
                     <CardDescription>Mostrar la URL al hacer hover sobre un link</CardDescription>
@@ -1052,7 +1052,7 @@ export function PersonalizationPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-aburrido-400" />
+                      <Sparkles className="w-5 h-5 text-keef-400" />
                       <CardTitle>Formulario de contacto</CardTitle>
                     </div>
                     <CardDescription>Agregá un formulario de suscripción por email</CardDescription>
@@ -1070,13 +1070,13 @@ export function PersonalizationPage() {
                           <label className="text-xs text-text-secondary block mb-1">Título del formulario</label>
                           <input type="text" value={theme.lead_form_title}
                             onChange={(e) => updateTheme('lead_form_title', e.target.value)}
-                            className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                            className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500" />
                         </div>
                         <div>
                           <label className="text-xs text-text-secondary block mb-1">Texto del botón</label>
                           <input type="text" value={theme.lead_form_button_text}
                             onChange={(e) => updateTheme('lead_form_button_text', e.target.value)}
-                            className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                            className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500" />
                         </div>
                       </>
                     )}
@@ -1092,7 +1092,7 @@ export function PersonalizationPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <Music className="w-5 h-5 text-aburrido-400" />
+                      <Music className="w-5 h-5 text-keef-400" />
                       <CardTitle>{t('personalization.video.music')}</CardTitle>
                     </div>
                     <CardDescription>{t('personalization.video.musicUrl')}</CardDescription>
@@ -1102,7 +1102,7 @@ export function PersonalizationPage() {
                       type="url"
                       value={theme.background_music_url || ''}
                       onChange={(e) => updateTheme('background_music_url', e.target.value || null)}
-                      className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm focus:outline-none focus:border-aburrido-500"
+                      className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm focus:outline-none focus:border-keef-500"
                       placeholder="https://example.com/song.mp3"
                     />
                     {theme.background_music_url && (
@@ -1123,7 +1123,7 @@ export function PersonalizationPage() {
                     <textarea
                       value={theme.custom_css || ''}
                       onChange={(e) => updateTheme('custom_css', e.target.value)}
-                      className="w-full h-48 px-4 py-3 bg-surface-2 border border-border rounded-xl text-white font-mono text-sm focus:outline-none focus:border-aburrido-500 resize-none"
+                      className="w-full h-48 px-4 py-3 bg-surface-2 border border-border rounded-xl text-white font-mono text-sm focus:outline-none focus:border-keef-500 resize-none"
                       placeholder={t('personalization.advanced.customCssPlaceholder')}
                     />
                   </Card>
@@ -1149,7 +1149,7 @@ export function PersonalizationPage() {
                   <div className="space-y-3">
                     <Input label={t('settings.displayName')} value={profile.display_name || ''} onChange={() => {}} placeholder={profile.username} />
                     <Input label={t('settings.bio')} value={profile.bio || ''} onChange={() => {}} placeholder={t('settings.bioPlaceholder')} />
-                    <p className="text-xs text-text-secondary">{t('settings.bio')} <a href="/settings" className="text-aburrido-400 hover:underline">{t('settings.personalization')}</a></p>
+                    <p className="text-xs text-text-secondary">{t('settings.bio')} <a href="/settings" className="text-keef-400 hover:underline">{t('settings.personalization')}</a></p>
                   </div>
                 </Card>
               </div>
@@ -1267,7 +1267,7 @@ export function PersonalizationPage() {
                               <select
                                 value={block.type}
                                 onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, type: e.target.value as Block['type'], data: {} } : b))}
-                                className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500"
+                                className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500"
                               >
                                 <option value="hero">Hero</option>
                                 <option value="links">Links</option>
@@ -1278,7 +1278,7 @@ export function PersonalizationPage() {
                                 <option value="divider">Divisor</option>
                               </select>
                               <label className="flex items-center gap-2 text-xs text-text-secondary cursor-pointer">
-                                <div className={`relative w-9 h-5 rounded-full transition-colors ${block.is_active ? 'bg-aburrido-500' : 'bg-border'}`}>
+                                <div className={`relative w-9 h-5 rounded-full transition-colors ${block.is_active ? 'bg-keef-500' : 'bg-border'}`}>
                                   <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${block.is_active ? 'translate-x-4' : ''}`} />
                                   <input type="checkbox" checked={block.is_active} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, is_active: e.target.checked } : b))} className="sr-only" />
                                 </div>
@@ -1288,21 +1288,21 @@ export function PersonalizationPage() {
                             {/* Block type-specific data editors */}
                             {block.type === 'hero' && (
                               <div className="space-y-2 pt-1">
-                                <input type="text" placeholder="URL del avatar" value={(block.data.avatarUrl as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, avatarUrl: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
-                                <input type="text" placeholder="Nombre a mostrar" value={(block.data.displayName as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, displayName: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
-                                <textarea placeholder="Biografía" value={(block.data.bio as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, bio: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500 resize-none" rows={2} />
+                                <input type="text" placeholder="URL del avatar" value={(block.data.avatarUrl as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, avatarUrl: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500" />
+                                <input type="text" placeholder="Nombre a mostrar" value={(block.data.displayName as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, displayName: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500" />
+                                <textarea placeholder="Biografía" value={(block.data.bio as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, bio: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500 resize-none" rows={2} />
                               </div>
                             )}
                             {block.type === 'links' && (
                               <div className="space-y-2 pt-1">
-                                <input type="text" placeholder="Título de la sección" value={(block.data.title as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, title: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                                <input type="text" placeholder="Título de la sección" value={(block.data.title as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, title: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500" />
                                 <p className="text-xs text-text-secondary">Los links se mostrarán automáticamente desde tu lista de links.</p>
                               </div>
                             )}
                             {block.type === 'gallery' && (
                               <div className="space-y-2 pt-1">
                                 <div className="flex items-center gap-2">
-                                  <input type="text" placeholder="URL de imagen" className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500"
+                                  <input type="text" placeholder="URL de imagen" className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500"
                                     value={''}
                                     onChange={(e) => {
                                       const input = e.target
@@ -1336,19 +1336,19 @@ export function PersonalizationPage() {
                             )}
                             {block.type === 'embed' && (
                               <div className="space-y-2 pt-1">
-                                <input type="url" placeholder="URL del embed (YouTube, Spotify, etc.)" value={(block.data.url as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, url: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                                <input type="url" placeholder="URL del embed (YouTube, Spotify, etc.)" value={(block.data.url as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, url: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500" />
                               </div>
                             )}
                             {block.type === 'text' && (
                               <div className="space-y-2 pt-1">
-                                <textarea placeholder="Contenido del texto (Markdown)" value={(block.data.content as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, content: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500 resize-none" rows={3} />
+                                <textarea placeholder="Contenido del texto (Markdown)" value={(block.data.content as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, content: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500 resize-none" rows={3} />
                               </div>
                             )}
                             {block.type === 'cta' && (
                               <div className="space-y-2 pt-1">
-                                <input type="text" placeholder="Texto del botón" value={(block.data.text as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, text: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
-                                <input type="url" placeholder="URL de destino" value={(block.data.url as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, url: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
-                                <select value={(block.data.style as string) || 'primary'} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, style: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500">
+                                <input type="text" placeholder="Texto del botón" value={(block.data.text as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, text: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500" />
+                                <input type="url" placeholder="URL de destino" value={(block.data.url as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, url: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500" />
+                                <select value={(block.data.style as string) || 'primary'} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, style: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500">
                                   <option value="primary">Primario</option>
                                   <option value="secondary">Secundario</option>
                                   <option value="outline">Outline</option>
@@ -1357,7 +1357,7 @@ export function PersonalizationPage() {
                             )}
                             {block.type === 'divider' && (
                               <div className="space-y-2 pt-1">
-                                <select value={(block.data.style as string) || 'line'} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, style: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500">
+                                <select value={(block.data.style as string) || 'line'} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, style: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-keef-500">
                                   <option value="line">Línea</option>
                                   <option value="dots">Puntos</option>
                                   <option value="glow">Brillo</option>
@@ -1411,10 +1411,10 @@ export function PersonalizationPage() {
                 <div className="flex items-center justify-between">
                   <CardTitle>{t('personalization.preview')}</CardTitle>
                   <div className="flex gap-1 bg-surface-3 rounded-lg p-0.5">
-                    <button onClick={() => setPreviewDevice('desktop')} className={`p-1.5 rounded-md transition-colors ${previewDevice === 'desktop' ? 'bg-aburrido-500 text-white' : 'text-text-secondary'}`}>
+                    <button onClick={() => setPreviewDevice('desktop')} className={`p-1.5 rounded-md transition-colors ${previewDevice === 'desktop' ? 'bg-keef-500 text-white' : 'text-text-secondary'}`}>
                       <Monitor className="w-3.5 h-3.5" />
                     </button>
-                    <button onClick={() => setPreviewDevice('mobile')} className={`p-1.5 rounded-md transition-colors ${previewDevice === 'mobile' ? 'bg-aburrido-500 text-white' : 'text-text-secondary'}`}>
+                    <button onClick={() => setPreviewDevice('mobile')} className={`p-1.5 rounded-md transition-colors ${previewDevice === 'mobile' ? 'bg-keef-500 text-white' : 'text-text-secondary'}`}>
                       <Smartphone className="w-3.5 h-3.5" />
                     </button>
                   </div>

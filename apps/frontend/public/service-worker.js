@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aburrido-v2'
+const CACHE_NAME = 'keef-v2'
 const STATIC_ASSETS = [
   '/',
   '/index.html',

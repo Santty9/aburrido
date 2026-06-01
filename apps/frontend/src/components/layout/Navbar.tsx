@@ -21,7 +21,7 @@ export function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-40 border-b border-border/50 bg-surface/80 backdrop-blur-xl">
       <div className="container-main flex items-center justify-between h-16">
         <Link to="/" className="text-xl font-bold gradient-text">
-          Aburrido
+          Keef
         </Link>
 
         <div className="hidden md:flex items-center gap-4">

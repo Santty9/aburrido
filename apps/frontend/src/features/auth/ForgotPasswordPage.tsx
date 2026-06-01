@@ -32,13 +32,13 @@ export function ForgotPasswordPage() {
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2 text-2xl font-bold gradient-text mb-2">
               <Sparkles className="w-6 h-6" />
-              Aburrido
+              Keef
             </Link>
           </div>
 
           <div className="bg-surface-2 border border-border rounded-2xl p-8 text-center space-y-4">
-            <div className="w-16 h-16 bg-aburrido-500/10 rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle className="w-8 h-8 text-aburrido-400" />
+            <div className="w-16 h-16 bg-keef-500/10 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle className="w-8 h-8 text-keef-400" />
             </div>
             <h2 className="text-xl font-bold">{t('common.success')}</h2>
             <p className="text-text-secondary text-sm">
@@ -46,7 +46,7 @@ export function ForgotPasswordPage() {
             </p>
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 text-sm text-aburrido-400 hover:text-aburrido-300 transition-colors mt-2"
+              className="inline-flex items-center gap-2 text-sm text-keef-400 hover:text-keef-300 transition-colors mt-2"
             >
               <ArrowLeft className="w-4 h-4" />
               {t('auth.login.title')}
@@ -68,7 +68,7 @@ export function ForgotPasswordPage() {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 text-2xl font-bold gradient-text mb-2">
             <Sparkles className="w-6 h-6" />
-            Aburrido
+            Keef
           </Link>
           <h1 className="text-2xl font-bold mt-4">{t('password.forgot.title')}</h1>
           <p className="text-text-secondary text-sm mt-1">{t('password.forgot.subtitle')}</p>
@@ -91,7 +91,7 @@ export function ForgotPasswordPage() {
           </Button>
 
           <p className="text-center text-sm text-text-secondary">
-            <Link to="/login" className="inline-flex items-center gap-1 text-aburrido-400 hover:text-aburrido-300 transition-colors">
+            <Link to="/login" className="inline-flex items-center gap-1 text-keef-400 hover:text-keef-300 transition-colors">
               <ArrowLeft className="w-3.5 h-3.5" />
               {t('auth.login.title')}
             </Link>

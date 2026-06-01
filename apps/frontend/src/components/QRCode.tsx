@@ -41,12 +41,12 @@ export function QRCode({ url, title = 'Compartir perfil' }: QRCodeProps) {
       if (!blob) return
       const a = document.createElement('a')
       a.href = URL.createObjectURL(blob)
-      a.download = 'aburrido-qr.png'
+      a.download = 'keef-qr.png'
       a.click()
       URL.revokeObjectURL(a.href)
     } catch {
       const link = document.createElement('a')
-      link.download = 'aburrido-qr.png'
+      link.download = 'keef-qr.png'
       link.href = canvasRef.current.toDataURL('image/png')
       link.click()
     }

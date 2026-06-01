@@ -41,7 +41,7 @@ export function LoginPage() {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 text-2xl font-bold gradient-text mb-2">
             <Sparkles className="w-6 h-6" />
-            Aburrido
+            Keef
           </Link>
           <h1 className="text-2xl font-bold mt-4">{t('auth.login.subtitle')}</h1>
           <p className="text-text-secondary text-sm mt-1">Inicia sesión en tu cuenta</p>
@@ -78,7 +78,7 @@ export function LoginPage() {
 
           <p className="text-center text-sm text-text-secondary">
             {t('auth.login.noAccount')}{' '}
-            <Link to="/register" className="text-aburrido-400 hover:text-aburrido-300 transition-colors">
+            <Link to="/register" className="text-keef-400 hover:text-keef-300 transition-colors">
               {t('auth.login.registerLink')}
             </Link>
           </p>

@@ -67,7 +67,7 @@ function LoadingScreen({ t }: { t: (key: any) => string }) {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-          className="w-12 h-12 border-[3px] border-aburrido-500/30 border-t-aburrido-500 rounded-full"
+          className="w-12 h-12 border-[3px] border-keef-500/30 border-t-keef-500 rounded-full"
         />
       </motion.div>
       <motion.p
@@ -108,7 +108,7 @@ function Error404({ error, t }: { error: string; t: (key: any) => string }) {
           <motion.a
             href="/"
             whileHover={{ scale: 1.05, gap: '12px' }}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-aburrido-500/10 border border-aburrido-500/30 text-aburrido-400 font-medium text-sm transition-all hover:bg-aburrido-500/20"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-keef-500/10 border border-keef-500/30 text-keef-400 font-medium text-sm transition-all hover:bg-keef-500/20"
           >
             {t('profile.404.back')} <ArrowUpRight className="w-4 h-4" />
           </motion.a>
@@ -550,8 +550,8 @@ export function PublicProfilePage() {
     }).catch(() => {
       setError('Error al cargar el perfil')
     })
-    document.title = `${username} | Aburrido`
-    return () => { document.title = 'Aburrido - Tu perfil de links' }
+    document.title = `${username} | Keef`
+    return () => { document.title = 'Keef - Tu perfil de links' }
   }, [username])
 
   useEffect(() => {
@@ -561,8 +561,8 @@ export function PublicProfilePage() {
       el.setAttribute('content', content)
     }
     if (!profile) return
-    const desc = profile.bio || `Mira el perfil de ${username} en Aburrido`
-    const title = `${profile.display_name || username} | Aburrido`
+    const desc = profile.bio || `Mira el perfil de ${username} en Keef`
+    const title = `${profile.display_name || username} | Keef`
     setMeta('name', 'description', desc)
     setMeta('property', 'og:title', title)
     setMeta('property', 'og:description', desc)
@@ -738,7 +738,7 @@ export function PublicProfilePage() {
                     theme.title_font_size === 'lg' ? 'text-3xl sm:text-4xl' :
                     'text-4xl sm:text-5xl'
                   } font-black tracking-tight leading-tight ${
-                    theme.title_style === 'gradient' ? 'bg-gradient-to-r from-white via-aburrido-300 to-white bg-clip-text text-transparent' :
+                    theme.title_style === 'gradient' ? 'bg-gradient-to-r from-white via-keef-300 to-white bg-clip-text text-transparent' :
                     theme.title_style === 'shadow' ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]' :
                     theme.title_style === 'outline' ? 'text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.8)]' : ''
                   }`}
@@ -755,7 +755,7 @@ export function PublicProfilePage() {
                     initial={{ scale: 0, rotate: -90 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ delay: 0.25, type: 'spring', stiffness: 200 }}
-                    className={`${theme.badge_style === 'glow' ? 'w-7 h-7 shadow-lg shadow-aburrido-500/60 animate-pulse' : theme.badge_style === 'minimal' ? 'w-5 h-5 bg-aburrido-500/80' : 'w-6 h-6 shadow-lg shadow-aburrido-500/40'} rounded-full bg-aburrido-500 flex items-center justify-center`}
+                    className={`${theme.badge_style === 'glow' ? 'w-7 h-7 shadow-lg shadow-keef-500/60 animate-pulse' : theme.badge_style === 'minimal' ? 'w-5 h-5 bg-keef-500/80' : 'w-6 h-6 shadow-lg shadow-keef-500/40'} rounded-full bg-keef-500 flex items-center justify-center`}
                     title="Verificado"
                   >
                     <Check className="w-3.5 h-3.5 text-white" />
@@ -1136,15 +1136,15 @@ export function PublicProfilePage() {
         {/* Password Gate */}
         {theme.profile_password && !(window as any).__profileUnlocked && (
           <div className="w-full flex flex-col items-center gap-4 p-8">
-            <div className="w-16 h-16 rounded-2xl bg-aburrido-500/10 flex items-center justify-center">
-              <Lock className="w-7 h-7 text-aburrido-400" />
+            <div className="w-16 h-16 rounded-2xl bg-keef-500/10 flex items-center justify-center">
+              <Lock className="w-7 h-7 text-keef-400" />
             </div>
             <h2 className="text-lg font-bold">Perfil protegido</h2>
             <p className="text-sm text-text-secondary text-center">Este perfil está protegido con contraseña</p>
             <form onSubmit={(e) => { e.preventDefault(); if (passwordInput === theme.profile_password) { setPasswordError(false); (window as any).__profileUnlocked = true; setPasswordInput('') } else { setPasswordError(true) } }} className="w-full max-w-xs space-y-3">
               <input type="password" value={passwordInput} placeholder="Contraseña"
                 onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false) }}
-                className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm text-center focus:outline-none focus:border-aburrido-500"
+                className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm text-center focus:outline-none focus:border-keef-500"
                 autoFocus />
               {passwordError && <p className="text-xs text-red-400 text-center">Contraseña incorrecta</p>}
               <button type="submit" className="w-full py-3 rounded-xl text-sm font-semibold" style={{ background: theme.accent_color, color: '#fff' }}>
@@ -1489,7 +1489,7 @@ END:VCARD`
                     theme.title_font_size === 'lg' ? 'text-3xl sm:text-4xl' :
                     'text-4xl sm:text-5xl'
                   } font-black tracking-tight leading-tight ${
-                    theme.title_style === 'gradient' ? 'bg-gradient-to-r from-white via-aburrido-300 to-white bg-clip-text text-transparent' :
+                    theme.title_style === 'gradient' ? 'bg-gradient-to-r from-white via-keef-300 to-white bg-clip-text text-transparent' :
                     theme.title_style === 'shadow' ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]' :
                     theme.title_style === 'outline' ? 'text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.8)]' : ''
                   }`}
@@ -1506,7 +1506,7 @@ END:VCARD`
                     initial={{ scale: 0, rotate: -90 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ delay: 0.25, type: 'spring', stiffness: 200 }}
-                    className={`${theme.badge_style === 'glow' ? 'w-7 h-7 shadow-lg shadow-aburrido-500/60 animate-pulse' : theme.badge_style === 'minimal' ? 'w-5 h-5 bg-aburrido-500/80' : 'w-6 h-6 shadow-lg shadow-aburrido-500/40'} rounded-full bg-aburrido-500 flex items-center justify-center`}
+                    className={`${theme.badge_style === 'glow' ? 'w-7 h-7 shadow-lg shadow-keef-500/60 animate-pulse' : theme.badge_style === 'minimal' ? 'w-5 h-5 bg-keef-500/80' : 'w-6 h-6 shadow-lg shadow-keef-500/40'} rounded-full bg-keef-500 flex items-center justify-center`}
                     title="Verificado"
                   >
                     <Check className="w-3.5 h-3.5 text-white" />

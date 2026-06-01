@@ -72,12 +72,12 @@ export function DashboardPage() {
 
       {/* Profile URL Bar */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-        className="flex items-center gap-3 bg-surface-2 border border-border rounded-xl px-4 py-3 group hover:border-aburrido-500/30 transition-colors"
+        className="flex items-center gap-3 bg-surface-2 border border-border rounded-xl px-4 py-3 group hover:border-keef-500/30 transition-colors"
       >
         <Globe className="w-4 h-4 text-text-secondary shrink-0" />
         <span className="text-sm text-text-secondary shrink-0">{t('dashboard.profileLink')}</span>
         <a href={profileUrl} target="_blank" rel="noopener noreferrer"
-          className="text-sm text-aburrido-400 hover:text-aburrido-300 transition-colors truncate flex items-center gap-1"
+          className="text-sm text-keef-400 hover:text-keef-300 transition-colors truncate flex items-center gap-1"
         >
           {profileUrl}
           <ExternalLink className="w-3 h-3 shrink-0" />
@@ -92,13 +92,13 @@ export function DashboardPage() {
         className="grid grid-cols-2 lg:grid-cols-4 gap-3"
       >
         {stats.map((stat, i) => (
-          <Card key={stat.label} className="relative overflow-hidden group hover:border-aburrido-500/30 transition-all duration-300">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-aburrido-500/5 to-transparent rounded-bl-full" />
+          <Card key={stat.label} className="relative overflow-hidden group hover:border-keef-500/30 transition-all duration-300">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-keef-500/5 to-transparent rounded-bl-full" />
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-text-secondary font-medium uppercase tracking-wider">{stat.label}</span>
-                <div className="w-8 h-8 rounded-lg bg-aburrido-500/10 flex items-center justify-center">
-                  <stat.icon className="w-4 h-4 text-aburrido-400" />
+                <div className="w-8 h-8 rounded-lg bg-keef-500/10 flex items-center justify-center">
+                  <stat.icon className="w-4 h-4 text-keef-400" />
                 </div>
               </div>
               <p className="text-2xl font-bold tracking-tight">
@@ -116,18 +116,18 @@ export function DashboardPage() {
           className="lg:col-span-2 space-y-3"
         >
           <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-4 h-4 text-aburrido-400" />
+            <Zap className="w-4 h-4 text-keef-400" />
             <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">Acceso rápido</h2>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { to: '/editor', label: 'Editor de Links', desc: 'Crear, editar y reordenar', icon: Link2, color: 'from-aburrido-500 to-purple-600' },
+              { to: '/editor', label: 'Editor de Links', desc: 'Crear, editar y reordenar', icon: Link2, color: 'from-keef-500 to-purple-600' },
               { to: '/analytics', label: 'Analytics', desc: 'Estadísticas detalladas', icon: BarChart3, color: 'from-emerald-500 to-teal-600' },
               { to: '/personalization', label: 'Personalizar', desc: 'Temas y colores', icon: Palette, color: 'from-pink-500 to-rose-600' },
               { to: '/settings', label: 'Ajustes', desc: 'Perfil y dominio', icon: Settings, color: 'from-amber-500 to-orange-600' },
             ].map(({ to, label, desc, icon: Icon, color }) => (
               <Link key={to} to={to}
-                className="relative group overflow-hidden rounded-xl border border-border bg-surface-2 p-4 hover:border-aburrido-500/30 transition-all duration-300"
+                className="relative group overflow-hidden rounded-xl border border-border bg-surface-2 p-4 hover:border-keef-500/30 transition-all duration-300"
               >
                 <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl ${color} opacity-10 rounded-bl-full transition-opacity group-hover:opacity-20`} />
                 <div className="flex items-start gap-3">
@@ -149,7 +149,7 @@ export function DashboardPage() {
           className="space-y-3"
         >
           <div className="flex items-center gap-2 mb-2">
-            <Activity className="w-4 h-4 text-aburrido-400" />
+            <Activity className="w-4 h-4 text-keef-400" />
             <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">{t('dashboard.accountStatus')}</h2>
           </div>
           <div className="rounded-xl border border-border bg-surface-2 divide-y divide-border">
@@ -161,7 +161,7 @@ export function DashboardPage() {
             </div>
             <div className="flex items-center justify-between px-4 py-3">
               <span className="text-sm text-text-secondary">{t('dashboard.username')}</span>
-              <span className="text-sm font-mono text-aburrido-400">@{profile.username}</span>
+              <span className="text-sm font-mono text-keef-400">@{profile.username}</span>
             </div>
             <div className="flex items-center justify-between px-4 py-3">
               <span className="text-sm text-text-secondary flex items-center gap-1.5">
@@ -187,9 +187,9 @@ export function DashboardPage() {
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
         className="grid md:grid-cols-2 gap-4"
       >
-        <div className="rounded-xl border border-border bg-surface-2 p-4 hover:border-aburrido-500/30 transition-colors">
+        <div className="rounded-xl border border-border bg-surface-2 p-4 hover:border-keef-500/30 transition-colors">
           <div className="flex items-center gap-2 mb-3">
-            <TrendingUp className="w-4 h-4 text-aburrido-400" />
+            <TrendingUp className="w-4 h-4 text-keef-400" />
             <h3 className="text-sm font-semibold">Resumen rápido</h3>
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -200,8 +200,8 @@ export function DashboardPage() {
               { icon: Hash, label: 'CTR promedio', value: '6.4%', change: '+2.1%' },
             ].map(({ icon: Icon, label, value, change }) => (
               <div key={label} className="flex items-center gap-3 p-2 rounded-lg bg-surface-3/50">
-                <div className="w-9 h-9 rounded-lg bg-aburrido-500/10 flex items-center justify-center">
-                  <Icon className="w-4 h-4 text-aburrido-400" />
+                <div className="w-9 h-9 rounded-lg bg-keef-500/10 flex items-center justify-center">
+                  <Icon className="w-4 h-4 text-keef-400" />
                 </div>
                 <div>
                   <p className="text-xs text-text-secondary">{label}</p>
@@ -215,9 +215,9 @@ export function DashboardPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-border bg-surface-2 p-4 hover:border-aburrido-500/30 transition-colors">
+        <div className="rounded-xl border border-border bg-surface-2 p-4 hover:border-keef-500/30 transition-colors">
           <div className="flex items-center gap-2 mb-3">
-            <Clock className="w-4 h-4 text-aburrido-400" />
+            <Clock className="w-4 h-4 text-keef-400" />
             <h3 className="text-sm font-semibold">Actividad reciente</h3>
           </div>
           <div className="space-y-2">
@@ -244,9 +244,9 @@ export function DashboardPage() {
       {/* Bottom CTA for free users */}
       {!profile.is_premium && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="rounded-xl bg-gradient-to-r from-aburrido-500/10 via-purple-500/10 to-pink-500/10 border border-aburrido-500/20 p-5 text-center"
+          className="rounded-xl bg-gradient-to-r from-keef-500/10 via-purple-500/10 to-pink-500/10 border border-keef-500/20 p-5 text-center"
         >
-          <Sparkles className="w-6 h-6 text-aburrido-400 mx-auto mb-2" />
+          <Sparkles className="w-6 h-6 text-keef-400 mx-auto mb-2" />
           <p className="text-sm font-semibold">Desbloqueá todas las funciones premium</p>
           <p className="text-xs text-text-secondary mt-1 mb-3">Temas exclusivos, analytics avanzados, sin marca de agua y más</p>
           <Link to="/premium">

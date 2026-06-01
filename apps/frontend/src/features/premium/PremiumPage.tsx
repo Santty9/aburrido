@@ -35,7 +35,7 @@ export function PremiumPage() {
     return (
       <div className="max-w-3xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-12">
-          <div className="w-20 h-20 mx-auto bg-gradient-to-br from-aburrido-500 to-pink-500 rounded-3xl flex items-center justify-center mb-6">
+          <div className="w-20 h-20 mx-auto bg-gradient-to-br from-keef-500 to-pink-500 rounded-3xl flex items-center justify-center mb-6">
             <Sparkles className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-3xl font-bold mb-2">{t('premium.title')}</h1>
@@ -48,7 +48,7 @@ export function PremiumPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-aburrido-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-keef-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -56,7 +56,7 @@ export function PremiumPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-aburrido-500/10 border border-aburrido-500/20 rounded-full text-sm text-aburrido-400 mb-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-keef-500/10 border border-keef-500/20 rounded-full text-sm text-keef-400 mb-4">
           <Sparkles className="w-4 h-4" />
           {t('premium.cta')}
         </div>
@@ -74,7 +74,7 @@ export function PremiumPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
           >
-            <Card className={`relative h-full ${i === 0 ? 'border-aburrido-500/50' : ''}`}>
+            <Card className={`relative h-full ${i === 0 ? 'border-keef-500/50' : ''}`}>
               {i === 0 && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <Badge variant="premium">{t('premium.popular')}</Badge>
@@ -131,7 +131,7 @@ export function PremiumPage() {
                 <span className="font-medium">{feature}</span>
                 <div className="flex items-center gap-4">
                   <span className="text-text-secondary w-20 text-right">{free}</span>
-                  <span className="text-aburrido-400 w-24 text-right">{premium}</span>
+                  <span className="text-keef-400 w-24 text-right">{premium}</span>
                 </div>
               </div>
             ))}

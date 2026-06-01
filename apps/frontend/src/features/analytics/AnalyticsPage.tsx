@@ -53,7 +53,7 @@ export function AnalyticsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-aburrido-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-keef-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -110,14 +110,14 @@ export function AnalyticsPage() {
         </div>
         <div className="flex gap-2 mb-6">
           <button onClick={handleExportCSV}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-xl bg-aburrido-500/10 border border-aburrido-500/20 text-aburrido-400 hover:bg-aburrido-500/20 transition-all">
+            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-xl bg-keef-500/10 border border-keef-500/20 text-keef-400 hover:bg-keef-500/20 transition-all">
             <Download className="w-4 h-4" />
             Exportar CSV
           </button>
         </div>
 
         {/* Live Analytics */}
-        <Card className="mb-6 border-aburrido-500/20">
+        <Card className="mb-6 border-keef-500/20">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -143,7 +143,7 @@ export function AnalyticsPage() {
                 liveEvents.map((ev) => (
                   <motion.div key={ev.id} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, height: 0 }} className="flex items-center gap-2 text-sm">
                     {ev.type === 'visit' ? (
-                      <Eye className="w-3.5 h-3.5 text-aburrido-400 shrink-0" />
+                      <Eye className="w-3.5 h-3.5 text-keef-400 shrink-0" />
                     ) : (
                       <MousePointerClick className="w-3.5 h-3.5 text-green-400 shrink-0" />
                     )}
@@ -164,15 +164,15 @@ export function AnalyticsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06 }}
             >
-              <Card className="hover:border-aburrido-500/30 transition-all duration-300">
+              <Card className="hover:border-keef-500/30 transition-all duration-300">
                 <div className="flex items-start justify-between mb-2">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-aburrido-500/20 to-purple-500/20 flex items-center justify-center">
-                    <Icon className="w-4.5 h-4.5 text-aburrido-400" />
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-keef-500/20 to-purple-500/20 flex items-center justify-center">
+                    <Icon className="w-4.5 h-4.5 text-keef-400" />
                   </div>
                 </div>
                 <p className="text-2xl font-bold">{typeof value === 'number' ? value.toLocaleString() : value}</p>
                 <p className="text-xs text-text-secondary mt-1">{label}</p>
-                <p className="text-[11px] text-aburrido-400 mt-0.5 font-medium">{change}</p>
+                <p className="text-[11px] text-keef-400 mt-0.5 font-medium">{change}</p>
               </Card>
             </motion.div>
           ))}
@@ -183,7 +183,7 @@ export function AnalyticsPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-aburrido-400" />
+                <Clock className="w-5 h-5 text-keef-400" />
                 <CardTitle>Actividad por hora</CardTitle>
               </div>
               <CardDescription>Distribución de visitas en las últimas 24h</CardDescription>
@@ -194,7 +194,7 @@ export function AnalyticsPage() {
                   <span className="w-6 text-right text-text-secondary font-mono">{h.hour}h</span>
                   <div className="flex-1 h-4 bg-surface-3 rounded-full overflow-hidden relative">
                     <div
-                      className={`h-full rounded-full transition-all duration-500 ${h.hour === currentHour ? 'bg-gradient-to-r from-aburrido-500 to-purple-500' : 'bg-aburrido-500/40'}`}
+                      className={`h-full rounded-full transition-all duration-500 ${h.hour === currentHour ? 'bg-gradient-to-r from-keef-500 to-purple-500' : 'bg-keef-500/40'}`}
                       style={{ width: `${(h.count / maxHour) * 100}%` }}
                     />
                   </div>
@@ -208,7 +208,7 @@ export function AnalyticsPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Globe className="w-5 h-5 text-aburrido-400" />
+                <Globe className="w-5 h-5 text-keef-400" />
                 <CardTitle>{t('analytics.referrers')}</CardTitle>
               </div>
               <CardDescription>{t('analytics.referrersDesc')}</CardDescription>
@@ -227,9 +227,9 @@ export function AnalyticsPage() {
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="w-20 h-2 bg-border rounded-full overflow-hidden">
-                          <div className="h-full bg-aburrido-500 rounded-full" style={{ width: `${pct}%` }} />
+                          <div className="h-full bg-keef-500 rounded-full" style={{ width: `${pct}%` }} />
                         </div>
-                        <span className="text-sm font-mono text-aburrido-400 w-16 text-right">{ref.count.toLocaleString()}</span>
+                        <span className="text-sm font-mono text-keef-400 w-16 text-right">{ref.count.toLocaleString()}</span>
                         <span className="text-[11px] text-text-secondary w-10 text-right">{pct}%</span>
                       </div>
                     </div>
@@ -245,7 +245,7 @@ export function AnalyticsPage() {
           <Card className="lg:col-span-2">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-aburrido-400" />
+                <BarChart3 className="w-5 h-5 text-keef-400" />
                 <CardTitle>{t('analytics.topLinks')}</CardTitle>
               </div>
               <CardDescription>{t('analytics.topLinksDesc')}</CardDescription>
@@ -271,7 +271,7 @@ export function AnalyticsPage() {
                           <p className="text-[10px] text-text-secondary">CTR {link.ctr.toFixed(1)}%</p>
                         </div>
                         <div className="w-16 h-2 bg-border rounded-full overflow-hidden">
-                          <div className="h-full bg-gradient-to-r from-aburrido-500 to-purple-500 rounded-full" style={{ width: `${pct}%` }} />
+                          <div className="h-full bg-gradient-to-r from-keef-500 to-purple-500 rounded-full" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
                     </div>
@@ -285,7 +285,7 @@ export function AnalyticsPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-aburrido-400" />
+                <TrendingUp className="w-5 h-5 text-keef-400" />
                 <CardTitle>Últimos 7 días</CardTitle>
               </div>
               <CardDescription>{t('analytics.lastDays', { count: analytics.visits_by_day.length })}</CardDescription>
@@ -299,7 +299,7 @@ export function AnalyticsPage() {
                       {new Date(day.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' })}
                     </span>
                     <div className="flex-1 h-5 bg-surface-3 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-aburrido-500 to-purple-500 rounded-full transition-all duration-500"
+                      <div className="h-full bg-gradient-to-r from-keef-500 to-purple-500 rounded-full transition-all duration-500"
                         style={{ width: `${(day.count / maxDay) * 100}%` }}
                       />
                     </div>
@@ -315,7 +315,7 @@ export function AnalyticsPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Hash className="w-5 h-5 text-aburrido-400" />
+              <Hash className="w-5 h-5 text-keef-400" />
               <CardTitle>{t('analytics.quickSummary')}</CardTitle>
             </div>
             <CardDescription>{t('analytics.quickSummaryDesc')}</CardDescription>
@@ -329,7 +329,7 @@ export function AnalyticsPage() {
             ].map(({ label, value }) => (
               <div key={label} className="flex items-center justify-between p-3 bg-surface-3 rounded-xl text-sm">
                 <span className="text-text-secondary text-xs">{label}</span>
-                <span className="font-mono text-aburrido-400 font-bold">{typeof value === 'number' ? value.toLocaleString() : value}</span>
+                <span className="font-mono text-keef-400 font-bold">{typeof value === 'number' ? value.toLocaleString() : value}</span>
               </div>
             ))}
           </div>

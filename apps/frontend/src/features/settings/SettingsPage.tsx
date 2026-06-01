@@ -54,7 +54,7 @@ export function SettingsPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-aburrido-400" />
+                <User className="w-5 h-5 text-keef-400" />
                 <CardTitle>{t('settings.profileInfo')}</CardTitle>
               </div>
               <CardDescription>{t('settings.profileInfoDesc')}</CardDescription>
@@ -101,7 +101,7 @@ export function SettingsPage() {
                 <label className="block text-sm font-medium text-text-secondary">{t('settings.bio')}</label>
                 <textarea
                   id="bio"
-                  className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white placeholder:text-text-secondary/50 focus:outline-none focus:border-aburrido-500 focus:ring-1 focus:ring-aburrido-500/50 transition-all duration-200 min-h-[100px] resize-none"
+                  className="w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white placeholder:text-text-secondary/50 focus:outline-none focus:border-keef-500 focus:ring-1 focus:ring-keef-500/50 transition-all duration-200 min-h-[100px] resize-none"
                   placeholder={t('settings.bioPlaceholder')}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
@@ -122,7 +122,7 @@ export function SettingsPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Palette className="w-5 h-5 text-aburrido-400" />
+                <Palette className="w-5 h-5 text-keef-400" />
                 <CardTitle>{t('settings.personalization')}</CardTitle>
               </div>
               <CardDescription>{t('settings.personalizationDesc')}</CardDescription>
@@ -139,7 +139,7 @@ export function SettingsPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Globe className="w-5 h-5 text-aburrido-400" />
+                <Globe className="w-5 h-5 text-keef-400" />
                 <CardTitle>{t('settings.customDomain')}</CardTitle>
               </div>
               <CardDescription>{t('settings.customDomainDesc')}</CardDescription>
@@ -160,7 +160,7 @@ export function SettingsPage() {
                 </p>
               )}
               <p className="text-xs text-text-secondary">
-                {t('settings.customDomain.howTo')} <code className="text-aburrido-400">aburrido.com</code>
+                {t('settings.customDomain.howTo')} <code className="text-keef-400">keef.app</code>
               </p>
               <Button onClick={handleVerifyDomain} isLoading={isVerifying}>
                 <CheckCircle className="w-4 h-4" />

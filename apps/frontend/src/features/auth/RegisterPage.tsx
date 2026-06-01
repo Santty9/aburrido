@@ -42,7 +42,7 @@ export function RegisterPage() {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 text-2xl font-bold gradient-text mb-2">
             <Sparkles className="w-6 h-6" />
-            Aburrido
+            Keef
           </Link>
           <h1 className="text-2xl font-bold mt-4">{t('auth.register.title')}</h1>
           <p className="text-text-secondary text-sm mt-1">Tu presencia online en un solo enlace</p>
@@ -88,7 +88,7 @@ export function RegisterPage() {
 
           <p className="text-center text-sm text-text-secondary">
             {t('auth.register.hasAccount')}{' '}
-            <Link to="/login" className="text-aburrido-400 hover:text-aburrido-300 transition-colors">
+            <Link to="/login" className="text-keef-400 hover:text-keef-300 transition-colors">
               {t('auth.register.loginLink')}
             </Link>
           </p>

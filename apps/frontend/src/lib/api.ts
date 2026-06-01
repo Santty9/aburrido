@@ -16,11 +16,11 @@ import type {
 } from '@aburrido/shared'
 import { DEFAULT_THEME } from '@aburrido/shared'
 
-const LOCAL_KEY = 'aburrido_data'
-const CL_KEY = 'aburrido_changelogs'
-const BADGE_KEY = 'aburrido_badges'
-const REG_COUNT_KEY = 'aburrido_reg_count'
-const MARKETPLACE_KEY = 'aburrido_marketplace'
+const LOCAL_KEY = 'keef_data'
+const CL_KEY = 'keef_changelogs'
+const BADGE_KEY = 'keef_badges'
+const REG_COUNT_KEY = 'keef_reg_count'
+const MARKETPLACE_KEY = 'keef_marketplace'
 
 function getData(): { profile: Profile; links: Link[] } {
   const raw = localStorage.getItem(LOCAL_KEY)
@@ -37,11 +37,11 @@ function getChangelogs(): ChangelogEntry[] {
   if (raw) return JSON.parse(raw)
 
   const defaults: ChangelogEntry[] = [
-    { id: 'cl-1', title: '🚀 Lanzamiento de Aburrido', content: 'Bienvenido a **Aburrido** — la forma más elegante de compartir tus links.\n\n## Features\n- Perfil público personalizable\n- Drag & drop para organizar links\n- 8 temas visuales únicos\n- Analytics en tiempo real', version: '1.0.0', type: 'feature', is_premium: false, created_at: '2026-05-15T10:00:00Z' },
+    { id: 'cl-1', title: '🚀 Lanzamiento de Keef', content: 'Bienvenido a **Keef** — la forma más elegante de compartir tus links.\n\n## Features\n- Perfil público personalizable\n- Drag & drop para organizar links\n- 8 temas visuales únicos\n- Analytics en tiempo real', version: '1.0.0', type: 'feature', is_premium: false, created_at: '2026-05-15T10:00:00Z' },
     { id: 'cl-2', title: '🎨 Temas Premium', content: 'Añadidos **temas exclusivos** para usuarios premium:\n\n- **Cyberpunk** — Colores neón vibrantes\n- **Sunset** — Degradado atardecer\n- **Ocean** — Azul profundo', version: '1.1.0', type: 'feature', is_premium: true, created_at: '2026-05-20T14:00:00Z' },
     { id: 'cl-3', title: '🐛 Fix: Analytics incorrectos', content: 'Corregido un bug donde los analytics mostraban conteos duplicados en visitas.', version: '1.1.1', type: 'fix', is_premium: false, created_at: '2026-05-25T09:00:00Z' },
     { id: 'cl-4', title: '⚡ Mejora de rendimiento', content: 'Optimizaciones:\n- Carga 60% más rápida\n- Lazy loading de imágenes\n- Reducción de bundle', version: '1.2.0', type: 'improvement', is_premium: false, created_at: '2026-05-28T16:00:00Z' },
-    { id: 'cl-5', title: '📱 PWA — App Instalable', content: 'Ahora Aburrido es una **Progressive Web App**.\n\n## Qué incluye\n- Instalación en tu móvil/escritorio como app nativa\n- Icono personalizado en home screen\n- Carga offline básica\n- Experiencia sin navegador (standalone)', version: '2.0.0', type: 'feature', is_premium: false, created_at: '2026-05-30T10:00:00Z' },
+    { id: 'cl-5', title: '📱 PWA — App Instalable', content: 'Ahora Keef es una **Progressive Web App**.\n\n## Qué incluye\n- Instalación en tu móvil/escritorio como app nativa\n- Icono personalizado en home screen\n- Carga offline básica\n- Experiencia sin navegador (standalone)', version: '2.0.0', type: 'feature', is_premium: false, created_at: '2026-05-30T10:00:00Z' },
     { id: 'cl-6', title: '📊 QR Code para compartir perfil', content: 'Cada perfil público ahora tiene un **código QR** descargable.', version: '2.1.0', type: 'feature', is_premium: false, created_at: '2026-05-30T12:00:00Z' },
     { id: 'cl-7', title: '🔍 SEO y Meta Tags para perfiles', content: 'Los perfiles públicos ahora tienen **meta tags optimizadas** para compartir en redes.', version: '2.2.0', type: 'feature', is_premium: false, created_at: '2026-05-30T14:00:00Z' },
     { id: 'cl-8', title: '📦 Exportar e Importar Links', content: 'Ahora puedes **exportar e importar** todos tus links en JSON.', version: '2.3.0', type: 'feature', is_premium: false, created_at: '2026-05-30T16:00:00Z' },
@@ -54,8 +54,8 @@ function getChangelogs(): ChangelogEntry[] {
     { id: 'cl-15', title: '🛡️ Admin Panel completo', content: 'El **Admin Panel** fue completamente rediseñado con:\n\n- **Resumen** — Estadísticas generales de la plataforma\n- **Insignias** — Gestión completa (CRUD + asignación)\n- **Changelog** — Crear, editar y eliminar entradas directamente\n- **Anuncios** — Publicar anuncios desde el panel\n- **Herramientas** — Exportar/importar datos completos de la plataforma', version: '3.3.0', type: 'feature', is_premium: false, created_at: '2026-05-31T22:30:00Z' },
     { id: 'cl-16', title: '🎨 Rediseño total del perfil público', content: 'El perfil público fue **completamente rediseñado**:\n\n- **Diseño premium** — Glass morphism, sombras, animaciones fluidas\n- **Medias de fondo** — Imágenes, GIFs y videos se cargan con transiciones suaves y sin cortes\n- **Loading states** — Spinner de carga, fade-in para imágenes/videos\n- **Badges en perfil** — Las insignias se muestran en el perfil público\n- **Volume controller** — Control de volumen moderno con slider animado\n- **Tipografía mejorada** — Mejor jerarquía visual', version: '3.4.0', type: 'improvement', is_premium: false, created_at: '2026-05-31T23:00:00Z' },
     { id: 'cl-17', title: '🎯 Insignia Early Adopter automática', content: 'Los **primeros 100 usuarios** en registrarse reciben automáticamente la insignia **Early Adopter** 🌟.\n\nAdemás:\n- El Changelog Admin se movió a `/admin`\n- Nuevas opciones de personalización:\n  - Forma del avatar (círculo, redondeado, cuadrado)\n  - Grosor del borde del avatar\n  - Efecto hover en links (escalar, brillar, elevar, ninguno)\n  - Estilo de estadísticas (mínimo, detallado, insignias)\n  - Espaciado entre links (compacto, normal, cómodo)\n  - Escala de bordes redondeados', version: '3.5.0', type: 'feature', is_premium: false, created_at: '2026-06-01T00:00:00Z' },
-    { id: 'cl-18', title: '🌐 i18n — Español e Inglés', content: 'Aburrido ahora soporta **idioma español e inglés** con switcher.', version: '3.6.0', type: 'feature', is_premium: false, created_at: '2026-06-01T08:00:00Z' },
-    { id: 'cl-19', title: '🔗 Dominios Personalizados', content: 'Usá tu **propio dominio** para tu perfil de Aburrido.', version: '3.7.0', type: 'feature', is_premium: true, created_at: '2026-06-01T10:00:00Z' },
+    { id: 'cl-18', title: '🌐 i18n — Español e Inglés', content: 'Keef ahora soporta **idioma español e inglés** con switcher.', version: '3.6.0', type: 'feature', is_premium: false, created_at: '2026-06-01T08:00:00Z' },
+    { id: 'cl-19', title: '🔗 Dominios Personalizados', content: 'Usá tu **propio dominio** para tu perfil de Keef.', version: '3.7.0', type: 'feature', is_premium: true, created_at: '2026-06-01T10:00:00Z' },
     { id: 'cl-20', title: '📅 Links Programados', content: 'Programá la **fecha de inicio y fin** de tus links.', version: '3.8.0', type: 'feature', is_premium: false, created_at: '2026-06-01T12:00:00Z' },
     { id: 'cl-21', title: '🖼️ Miniaturas en Links', content: 'Los links pueden mostrar **miniaturas** con vista previa.', version: '3.9.0', type: 'feature', is_premium: false, created_at: '2026-06-01T14:00:00Z' },
     { id: 'cl-22', title: '📝 Biografía Markdown', content: 'La biografía ahora soporta **formato Markdown**.', version: '3.10.0', type: 'feature', is_premium: false, created_at: '2026-06-01T16:00:00Z' },
@@ -232,7 +232,7 @@ export const profileApi = {
         data: {
           username,
           display_name: 'Usuario Ejemplo',
-          bio: 'Este es un perfil de ejemplo. Crea el tuyo en Aburrido!',
+          bio: 'Este es un perfil de ejemplo. Crea el tuyo en Keef!',
           avatar_url: null,
           theme: { ...DEFAULT_THEME, show_stats: true, show_particles: true, show_brand_footer: true },
           links: [
@@ -557,7 +557,7 @@ export const backupApi = {
   exportLinks: async (): Promise<ApiResponse<{ data: string; filename: string }>> => {
     await delay(200)
     const { links } = getData()
-    return { success: true, data: { data: JSON.stringify(links, null, 2), filename: `aburrido-links-${Date.now()}.json` } }
+    return { success: true, data: { data: JSON.stringify(links, null, 2), filename: `keef-links-${Date.now()}.json` } }
   },
   importLinks: async (json: string): Promise<ApiResponse<{ count: number }>> => {
     await delay(300)

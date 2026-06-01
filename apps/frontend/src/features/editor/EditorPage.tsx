@@ -52,7 +52,7 @@ async function unfurlUrl(url: string): Promise<LinkPreview | null> {
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <div className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${checked ? 'bg-aburrido-500' : 'bg-border'} shrink-0`}
+    <div className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${checked ? 'bg-keef-500' : 'bg-border'} shrink-0`}
       onClick={() => onChange(!checked)}>
       <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${checked ? 'translate-x-5' : ''}`} />
     </div>
@@ -235,7 +235,7 @@ export function EditorPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-aburrido-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-keef-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -300,7 +300,7 @@ export function EditorPage() {
                       onDragStart={() => handleDragStart(links.indexOf(link))}
                       onDragOver={(e) => handleDragOver(e, links.indexOf(link))}
                       onDragEnd={handleDragEnd}
-                      className={`bg-surface-2 border border-border rounded-xl p-3 flex items-center gap-2 transition-all duration-200 hover:border-aburrido-500/30 ${dragIndex === links.indexOf(link) ? 'opacity-50 border-aburrido-500' : ''}`}
+                      className={`bg-surface-2 border border-border rounded-xl p-3 flex items-center gap-2 transition-all duration-200 hover:border-keef-500/30 ${dragIndex === links.indexOf(link) ? 'opacity-50 border-keef-500' : ''}`}
                     >
                       <div className="cursor-grab active:cursor-grabbing text-text-secondary hover:text-white transition-colors">
                         <GripVertical className="w-4 h-4" />
@@ -319,7 +319,7 @@ export function EditorPage() {
                             <span className="text-[10px] text-text-secondary bg-surface-3 px-1.5 py-0.5 rounded shrink-0">{link.category}</span>
                           )}
                           {link.preview && (
-                            <span className="shrink-0 text-aburrido-400" title="Preview disponible"><Eye className="w-3 h-3 inline" /></span>
+                            <span className="shrink-0 text-keef-400" title="Preview disponible"><Eye className="w-3 h-3 inline" /></span>
                           )}
                           {link.pixels && (
                             <span className="shrink-0 text-amber-400" title="Tracking configurado"><Target className="w-3 h-3 inline" /></span>
@@ -359,7 +359,7 @@ export function EditorPage() {
             />
             {isUnfurling && (
               <div className="absolute right-3 top-8">
-                <div className="w-4 h-4 border-2 border-aburrido-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-keef-500 border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
@@ -379,7 +379,7 @@ export function EditorPage() {
                 </div>
               </div>
               {preview.image && (
-                <button onClick={() => setThumbnailUrl(preview.image!)} className="text-[10px] text-aburrido-400 hover:underline shrink-0" title="Usar como thumbnail">
+                <button onClick={() => setThumbnailUrl(preview.image!)} className="text-[10px] text-keef-400 hover:underline shrink-0" title="Usar como thumbnail">
                   <Image className="w-4 h-4" />
                 </button>
               )}
@@ -391,7 +391,7 @@ export function EditorPage() {
             <div className="flex flex-wrap gap-1.5">
               {linkIcons.map((ic) => (
                 <button key={ic} onClick={() => setIcon(ic)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-all text-base ${icon === ic ? 'border-aburrido-500 bg-aburrido-500/10 scale-110' : 'border-border hover:border-aburrido-500/50'}`}
+                  className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-all text-base ${icon === ic ? 'border-keef-500 bg-keef-500/10 scale-110' : 'border-border hover:border-keef-500/50'}`}
                   title={ic}>
                   {iconMap[ic] || '🌐'}
                 </button>
@@ -403,7 +403,7 @@ export function EditorPage() {
 
           <label className="flex items-center gap-3 p-3 bg-surface-3 rounded-xl cursor-pointer">
             <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)}
-              className="w-4 h-4 rounded border-border accent-aburrido-500" />
+              className="w-4 h-4 rounded border-border accent-keef-500" />
             <div>
               <span className="text-sm font-medium">Link destacado</span>
               <p className="text-xs text-text-secondary">Aparece más grande y con estilo especial</p>
@@ -425,7 +425,7 @@ export function EditorPage() {
           </button>
 
           {showAdvanced && (
-            <div className="space-y-4 pl-2 border-l-2 border-aburrido-500/30">
+            <div className="space-y-4 pl-2 border-l-2 border-keef-500/30">
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Target className="w-4 h-4 text-amber-400" />
@@ -448,16 +448,16 @@ export function EditorPage() {
                   <Toggle checked={affiliateEnabled} onChange={setAffiliateEnabled} />
                 </div>
                 {affiliateEnabled && (
-                  <p className="text-xs text-text-secondary">El link será cloaked: los visitantes verán una URL de Aburrido en lugar de la URL real.</p>
+                  <p className="text-xs text-text-secondary">El link será cloaked: los visitantes verán una URL de Keef en lugar de la URL real.</p>
                 )}
               </div>
 
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <QrCode className="w-4 h-4 text-aburrido-400" />
+                  <QrCode className="w-4 h-4 text-keef-400" />
                   <span className="text-sm font-medium">Código QR</span>
                 </div>
-                <Button variant="secondary" size="sm" onClick={() => setQrUrl(url || 'https://aburrido.app')}>
+                <Button variant="secondary" size="sm" onClick={() => setQrUrl(url || 'https://keef.app')}>
                   <QrCode className="w-4 h-4" />
                   Generar QR
                 </Button>

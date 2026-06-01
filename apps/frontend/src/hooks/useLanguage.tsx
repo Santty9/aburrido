@@ -17,7 +17,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null)
 
 function getInitialLanguage(): Language {
   if (typeof window === 'undefined') return 'es'
-  const stored = localStorage.getItem('aburrido_lang') as Language | null
+  const stored = localStorage.getItem('keef_lang') as Language | null
   if (stored === 'es' || stored === 'en') return stored
   const navLang = navigator.language?.startsWith('en') ? 'en' : 'es'
   return navLang as Language
@@ -42,7 +42,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLang = useCallback((newLang: Language) => {
     setLangState(newLang)
-    localStorage.setItem('aburrido_lang', newLang)
+    localStorage.setItem('keef_lang', newLang)
   }, [])
 
   return (

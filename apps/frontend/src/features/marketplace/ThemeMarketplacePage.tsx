@@ -117,7 +117,7 @@ export function ThemeMarketplacePage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-aburrido-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-keef-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -127,7 +127,7 @@ export function ThemeMarketplacePage() {
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center gap-3 mb-1">
-          <Sparkles className="w-6 h-6 text-aburrido-400" />
+          <Sparkles className="w-6 h-6 text-keef-400" />
           <h1 className="text-2xl font-bold">{t('marketplace.title')}</h1>
           <Badge variant="premium" className="text-[10px]">{themes.length} temas</Badge>
         </div>
@@ -145,7 +145,7 @@ export function ThemeMarketplacePage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar temas..."
-            className="w-full pl-10 pr-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm focus:outline-none focus:border-aburrido-500 transition-colors"
+            className="w-full pl-10 pr-4 py-3 bg-surface-2 border border-border rounded-xl text-white text-sm focus:outline-none focus:border-keef-500 transition-colors"
           />
         </div>
 
@@ -156,8 +156,8 @@ export function ThemeMarketplacePage() {
               onClick={() => setSelectedCategory(value)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
                 selectedCategory === value
-                  ? 'border-aburrido-500 bg-aburrido-500/10 text-aburrido-400'
-                  : 'border-border text-text-secondary hover:border-aburrido-500/50'
+                  ? 'border-keef-500 bg-keef-500/10 text-keef-400'
+                  : 'border-border text-text-secondary hover:border-keef-500/50'
               }`}
             >
               <span>{icon}</span> {label}
@@ -167,7 +167,7 @@ export function ThemeMarketplacePage() {
           <div className="ml-auto flex items-center gap-1.5">
             <Filter className="w-3.5 h-3.5 text-text-secondary" />
             <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-transparent text-xs text-text-secondary border border-border rounded-lg px-2 py-1.5 focus:outline-none focus:border-aburrido-500"
+              className="bg-transparent text-xs text-text-secondary border border-border rounded-lg px-2 py-1.5 focus:outline-none focus:border-keef-500"
             >
               <option value="downloads">Más descargados</option>
               <option value="rating">Mejor valorados</option>
@@ -192,7 +192,7 @@ export function ThemeMarketplacePage() {
             <Palette className="w-12 h-12 text-text-secondary mx-auto mb-3" />
             <p className="text-text-secondary text-sm">No se encontraron temas</p>
             <button onClick={() => { setSearchQuery(''); setSelectedCategory('') }}
-              className="text-aburrido-400 text-sm mt-2 hover:underline">
+              className="text-keef-400 text-sm mt-2 hover:underline">
               Limpiar filtros
             </button>
           </div>
@@ -204,7 +204,7 @@ export function ThemeMarketplacePage() {
             return (
               <motion.div key={communityTheme.id} variants={item} layout>
                 <Card className={cn('h-full flex flex-col transition-all duration-200 group',
-                  isApplied && 'ring-2 ring-aburrido-500'
+                  isApplied && 'ring-2 ring-keef-500'
                 )}>
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between gap-2 mb-1">
@@ -239,7 +239,7 @@ export function ThemeMarketplacePage() {
                   </div>
 
                   <div className="px-6 pb-6 mt-auto">
-                    <Button className="w-full group-hover:shadow-lg group-hover:shadow-aburrido-500/10 transition-all"
+                    <Button className="w-full group-hover:shadow-lg group-hover:shadow-keef-500/10 transition-all"
                       variant={isApplied ? 'secondary' : 'primary'}
                       onClick={() => handleApply(communityTheme.theme)}
                       isLoading={isLoading}

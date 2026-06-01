@@ -31,7 +31,7 @@ export function ChangelogPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-aburrido-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-keef-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -40,7 +40,7 @@ export function ChangelogPage() {
     <div className="min-h-screen bg-surface">
       <div className="max-w-3xl mx-auto px-4 py-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-aburrido-500/10 border border-aburrido-500/20 rounded-full text-sm text-aburrido-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-keef-500/10 border border-keef-500/20 rounded-full text-sm text-keef-400 mb-4">
             <Newspaper className="w-4 h-4" />
             {t('changelog.badge')}
           </div>
@@ -70,8 +70,8 @@ export function ChangelogPage() {
                     transition={{ delay: i * 0.1 }}
                     className="relative pl-12"
                   >
-                    <div className="absolute left-2.5 top-2 w-3 h-3 rounded-full bg-surface-3 border-2 border-aburrido-500" />
-                    <Card className="hover:border-aburrido-500/30 transition-all duration-300">
+                    <div className="absolute left-2.5 top-2 w-3 h-3 rounded-full bg-surface-3 border-2 border-keef-500" />
+                    <Card className="hover:border-keef-500/30 transition-all duration-300">
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <CardTitle className="flex items-center gap-2">
