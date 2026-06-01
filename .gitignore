@@ -1,0 +1,36 @@
+node_modules/
+dist/
+.turbo/
+.cache/
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Coverage
+coverage/
+
+# Test
+test-results/
+playwright-report/
+
+# TypeScript
+*.tsbuildinfo
+
+# Supabase
+supabase/.temp

@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlanType {
+  free
+  premium
+  pro
+}
+
+enum ChangelogType {
+  feature
+  fix
+  improvement
+}
+
+model Profile {
+  id                String    @id @default(uuid()) @db.Uuid
+  auth_user_id      String    @unique
+  username          String    @unique
+  display_name      String?
+  bio               String?
+  avatar_url        String?
+  theme             Json       @default("{\"type\":\"dark\",\"background\":\"#0a0a0f\",\"background_type\":\"solid\",\"text_color\":\"#ffffff\",\"accent_color\":\"#8b5cf6\",\"button_style\":\"rounded\",\"button_color\":\"#1e1e2e\",\"button_text_color\":\"#ffffff\",\"font\":\"Inter\",\"show_avatar\":true,\"show_bio\":true,\"custom_css\":null}")
+  plan              PlanType   @default(free)
+  is_premium        Boolean    @default(false)
+  premium_since     DateTime?
+  total_visits      Int        @default(0)
+  stripe_customer_id String?
+  created_at        DateTime   @default(now())
+  updated_at        DateTime   @updatedAt
+
+  links         Link[]
+  visits        Visit[]
+  subscriptions Subscription[]
+
+  @@map("profiles")
+}
+
+model Link {
+  id         String   @id @default(uuid()) @db.Uuid
+  profile_id String   @db.Uuid
+  title      String
+  url        String
+  icon       String   @default("globe")
+  icon_url   String?
+  position   Int      @default(0)
+  is_active  Boolean  @default(true)
+  clicks     Int      @default(0)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  profile  Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  clickLog Click[]
+
+  @@index([profile_id])
+  @@map("links")
+}
+
+model Visit {
+  id         String   @id @default(uuid()) @db.Uuid
+  profile_id String   @db.Uuid
+  visitor_ip String?
+  user_agent String?
+  referer    String?
+  country    String?
+  created_at DateTime @default(now())
+
+  profile Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+
+  @@index([profile_id])
+  @@index([created_at])
+  @@map("visits")
+}
+
+model Click {
+  id         String   @id @default(uuid()) @db.Uuid
+  link_id    String   @db.Uuid
+  visitor_ip String?
+  user_agent String?
+  referer    String?
+  created_at DateTime @default(now())
+
+  link Link @relation(fields: [link_id], references: [id], onDelete: Cascade, map: "click_link_rel")
+
+  @@index([link_id])
+  @@index([created_at])
+  @@map("clicks")
+}
+
+model Subscription {
+  id                     String    @id @default(uuid()) @db.Uuid
+  profile_id             String    @unique @db.Uuid
+  plan                   PlanType  @default(premium)
+  status                 String    @default("active")
+  current_period_start   DateTime  @default(now())
+  current_period_end     DateTime?
+  stripe_subscription_id String?
+  stripe_customer_id     String?
+  created_at             DateTime  @default(now())
+  updated_at             DateTime  @updatedAt
+
+  profile Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model Changelog {
+  id         String        @id @default(uuid()) @db.Uuid
+  title      String
+  content    String
+  version    String
+  type       ChangelogType @default(feature)
+  is_premium Boolean       @default(false)
+  created_at DateTime      @default(now())
+
+  votes ChangelogVote[]
+
+  @@map("changelogs")
+}
+
+model ChangelogVote {
+  id         String   @id @default(uuid()) @db.Uuid
+  changelog_id String @db.Uuid
+  profile_id  String  @db.Uuid
+  vote        Int     @default(1)
+  created_at  DateTime @default(now())
+
+  changelog Changelog @relation(fields: [changelog_id], references: [id], onDelete: Cascade)
+
+  @@unique([changelog_id, profile_id])
+  @@map("changelog_votes")
+}
