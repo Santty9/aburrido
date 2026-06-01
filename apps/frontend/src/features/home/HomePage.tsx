@@ -4,7 +4,12 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useLanguage } from '@/hooks/useLanguage'
 import { useAuth } from '@/hooks/useAuth'
-import { ArrowRight, Star, Layers, Palette, BarChart3, Smartphone, Globe, Zap, Sparkles, ExternalLink, MousePointerClick, Users, Eye, Link2, Shield, Github, Twitter, Instagram } from 'lucide-react'
+import {
+  ArrowRight, Star, Layers, Palette, BarChart3, Smartphone, Globe, Zap, Sparkles,
+  ExternalLink, MousePointerClick, Users, Eye, Link2, Shield, Github, Twitter, Instagram,
+  Check, ChevronRight, Heart, MessageCircle, Quote, Clock, Target, Rocket, Gem,
+  TrendingUp, Activity, Crown, QrCode, Download, Share2, Bookmark, ThumbsUp
+} from 'lucide-react'
 
 function PhoneFrame({ children }: { children: React.ReactNode }) {
   return (
@@ -69,6 +74,43 @@ const stagger = {
   item: { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } },
 }
 
+const features = [
+  {
+    icon: Layers, title: 'Editor drag & drop', desc: 'Organiza tus links con solo arrastrar y soltar. Reordená, agrupá y personalizá cada uno al instante.',
+    gradient: 'from-keef-500/10 to-transparent', color: 'from-keef-400 to-purple-400',
+  },
+  {
+    icon: Palette, title: 'Temas ilimitados', desc: 'Personalizá colores, fuentes, animaciones y estilos. Crea la identidad visual que te represente.',
+    gradient: 'from-pink-500/10 to-transparent', color: 'from-pink-400 to-rose-400',
+  },
+  {
+    icon: BarChart3, title: 'Analytics en tiempo real', desc: 'Seguí cada visita, click y conversion con estadisticas detalladas y graficos interactivos.',
+    gradient: 'from-sky-500/10 to-transparent', color: 'from-sky-400 to-cyan-400',
+  },
+]
+
+const bottomFeatures = [
+  { icon: QrCode, title: 'Codigos QR', desc: 'Genera QR unico para tu perfil' },
+  { icon: Globe, title: 'Dominio propio', desc: 'Usa tu dominio personalizado' },
+  { icon: Download, title: 'Exporta tus datos', desc: 'Descarga analytics en CSV' },
+  { icon: Share2, title: 'Comparti facil', desc: 'Un link para todas tus redes' },
+  { icon: Shield, title: 'Verificacion', desc: 'Badge de autenticidad' },
+  { icon: Smartphone, title: 'Responsive', desc: 'Se ve perfecto en todos lados' },
+]
+
+const steps = [
+  { step: '01', icon: Users, title: 'Crea tu cuenta', desc: 'Registrate en segundos. Sin tarjeta de credito, sin complicaciones.' },
+  { step: '02', icon: Link2, title: 'Agrega tus links', desc: 'Suma todas tus redes, sitios y proyectos. Organizalos como quieras.' },
+  { step: '03', icon: Rocket, title: 'Comparti al mundo', desc: 'Un solo link para todo. Compartilo donde quieras y segui tus stats.' },
+]
+
+const premiumFeatures = [
+  { icon: Crown, title: 'Temas exclusivos', desc: 'Accede a temas premium que nadie mas tiene', gradient: 'from-keef-500 to-purple-500' },
+  { icon: Shield, title: 'Sin marca de agua', desc: 'Elimina el "Powered by Keef" de tu perfil', gradient: 'from-pink-500 to-rose-500' },
+  { icon: Gem, title: 'Badges y extras', desc: 'Badges de verificacion, estrellas y mas', gradient: 'from-amber-500 to-orange-500' },
+  { icon: Globe, title: 'Dominio personalizado', desc: 'Conecta tu propio dominio sin limites', gradient: 'from-sky-500 to-cyan-500' },
+]
+
 export function HomePage() {
   const { t } = useLanguage()
   const { isAuthenticated } = useAuth()
@@ -78,20 +120,16 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#08080d] overflow-hidden">
-      {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-keef-500/5 rounded-full blur-[120px]" />
         <div className="absolute top-[30%] right-[-20%] w-[50%] h-[50%] bg-pink-500/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-[-10%] left-[20%] w-[40%] h-[40%] bg-sky-500/5 rounded-full blur-[120px]" />
       </div>
 
-      {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 mix-blend-difference">
         <div className="max-w-7xl mx-auto flex items-center justify-between h-20 px-6 lg:px-10">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-              <span className="text-white font-black text-sm">K</span>
-            </div>
+            <img src="/logo-keef.png" alt="Keef" className="w-8 h-8 rounded-xl" />
             <span className="text-white font-bold text-lg tracking-tight">Keef</span>
           </Link>
           <div className="flex items-center gap-3">
@@ -119,11 +157,9 @@ export function HomePage() {
         </div>
       </nav>
 
-      {/* Hero */}
       <section ref={heroRef} className="relative min-h-screen flex items-center pt-28 pb-16 lg:pb-0 lg:pt-0">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Left */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -161,11 +197,10 @@ export function HomePage() {
                 </Link>
               </motion.div>
 
-              {/* Trusted by mini section */}
               <motion.div variants={stagger.item} className="mt-14 pt-8 border-t border-white/[0.04]">
                 <p className="text-[11px] uppercase tracking-[0.15em] text-white/20 mb-5 font-medium">Trusted by creators worldwide</p>
                 <div className="flex items-center gap-6 flex-wrap">
-                  {['@santty', '@juan_, @maria', '@code', '@design'].map((name) => (
+                  {['@santty', '@juan', '@maria', '@code', '@design'].map((name) => (
                     <div key={name} className="flex items-center gap-2 text-white/15">
                       <div className="w-6 h-6 rounded-full bg-white/[0.04]" />
                       <span className="text-sm font-medium">{name}</span>
@@ -175,7 +210,6 @@ export function HomePage() {
               </motion.div>
             </motion.div>
 
-            {/* Right - Phone Mockup */}
             <motion.div
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
@@ -183,7 +217,6 @@ export function HomePage() {
               style={{ y: heroParallax }}
               className="relative flex justify-center lg:justify-end"
             >
-              {/* Floating stat badges */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -225,7 +258,6 @@ export function HomePage() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -242,15 +274,14 @@ export function HomePage() {
         </motion.div>
       </section>
 
-      {/* Stats Section */}
       <section className="relative py-20 border-t border-white/[0.04]">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/[0.04] rounded-3xl overflow-hidden">
             {[
-              { icon: Users, value: '10K+', label: 'Active users', desc: 'and growing daily' },
-              { icon: Link2, value: '50K+', label: 'Links created', desc: 'across all profiles' },
-              { icon: MousePointerClick, value: '1M+', label: 'Monthly visits', desc: 'and counting' },
-              { icon: Star, value: '4.9', label: 'Average rating', desc: 'from user reviews' },
+              { icon: Users, value: '10K+', label: 'Usuarios activos', desc: 'y creciendo cada dia' },
+              { icon: Link2, value: '50K+', label: 'Links creados', desc: 'en todos los perfiles' },
+              { icon: MousePointerClick, value: '1M+', label: 'Visitas mensuales', desc: 'y sumando' },
+              { icon: Star, value: '4.9', label: 'Valoracion promedio', desc: 'de nuestros usuarios' },
             ].map(({ icon: Icon, value, label, desc }, i) => (
               <motion.div
                 key={i}
@@ -272,7 +303,6 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Features - Asymmetric Layout */}
       <section className="relative py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <motion.div
@@ -283,22 +313,17 @@ export function HomePage() {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] text-xs text-white/30 mb-5">
               <span className="w-1 h-1 rounded-full bg-keef-400" />
-              Features
+              Todo en un solo lugar
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-[0.95]">
-              Everything you need to<br />
-              <span className="text-white/40">share your links</span>
+              Todo lo que necesitas para<br />
+              <span className="text-white/40">compartir tus links</span>
             </h2>
           </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Left - Feature Cards */}
             <div className="space-y-4">
-              {[
-                { icon: Layers, title: 'home.features.dragDrop' as const, desc: 'home.features.dragDropDesc' as const, gradient: 'from-keef-500/10 to-transparent' },
-                { icon: Palette, title: 'home.features.themes' as const, desc: 'home.features.themesDesc' as const, gradient: 'from-pink-500/10 to-transparent' },
-                { icon: BarChart3, title: 'home.features.analytics' as const, desc: 'home.features.analyticsDesc' as const, gradient: 'from-sky-500/10 to-transparent' },
-              ].map(({ icon: Icon, title, desc, gradient }, i) => (
+              {features.map(({ icon: Icon, title, desc, gradient, color }, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
@@ -308,19 +333,18 @@ export function HomePage() {
                   className={`group relative bg-gradient-to-r ${gradient} border border-white/[0.04] hover:border-white/[0.08] rounded-2xl p-6 transition-all duration-500`}
                 >
                   <div className="flex items-start gap-5">
-                    <div className="w-11 h-11 rounded-xl bg-white/[0.03] flex items-center justify-center shrink-0 group-hover:bg-white/[0.06] transition-colors">
-                      <Icon className="w-5 h-5 text-white/50 group-hover:text-white/70 transition-colors" />
+                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shrink-0 shadow-lg`}>
+                      <Icon className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-base font-semibold text-white mb-1.5">{t(title)}</h3>
-                      <p className="text-sm text-white/30 leading-relaxed">{t(desc)}</p>
+                      <h3 className="text-base font-semibold text-white mb-1.5">{title}</h3>
+                      <p className="text-sm text-white/30 leading-relaxed">{desc}</p>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-            {/* Right - Showcase Card */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -340,7 +364,8 @@ export function HomePage() {
                   <span className="text-xs text-white/20">+2.4k creators</span>
                 </div>
                 <blockquote className="text-lg md:text-xl text-white/70 leading-relaxed font-medium">
-                  "Keef completely changed how I share my content. <span className="text-white">One link, everything organized.</span> It's that simple."
+                  &ldquo;Keef cambio completamente como comparto mi contenido.{' '}
+                  <span className="text-white">Un link, todo organizado.</span> Es asi de simple.&rdquo;
                 </blockquote>
                 <div className="flex items-center gap-3 mt-6 pt-6 border-t border-white/[0.04]">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-keef-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
@@ -360,37 +385,25 @@ export function HomePage() {
             </motion.div>
           </div>
 
-          {/* Bottom three features */}
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
-            {[
-              { icon: Smartphone, title: 'home.features.qr' as const, desc: 'home.features.qrDesc' as const },
-              { icon: Globe, title: 'home.features.pwa' as const, desc: 'home.features.pwaDesc' as const },
-              { icon: Layers, title: 'home.features.export' as const, desc: 'home.features.exportDesc' as const },
-            ].map(({ icon: Icon, title, desc }, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 + i * 0.08 }}
-                className="group bg-white/[0.02] border border-white/[0.04] hover:border-white/[0.08] rounded-xl p-5 transition-all duration-500"
-              >
-                <div className="flex items-center gap-3 mb-0">
-                  <div className="w-9 h-9 rounded-lg bg-white/[0.03] flex items-center justify-center group-hover:bg-white/[0.06] transition-colors">
-                    <Icon className="w-4.5 h-4.5 text-white/40" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-white/80">{t(title)}</h3>
-                    <p className="text-xs text-white/25">{t(desc)}</p>
-                  </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mt-8"
+          >
+            {bottomFeatures.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="group bg-white/[0.02] border border-white/[0.04] hover:border-white/[0.08] rounded-xl p-4 text-center transition-all duration-500">
+                <div className="w-9 h-9 rounded-lg bg-white/[0.03] flex items-center justify-center mx-auto mb-2 group-hover:bg-white/[0.06] transition-colors">
+                  <Icon className="w-4 h-4 text-white/40" />
                 </div>
-              </motion.div>
+                <p className="text-xs font-medium text-white/80">{title}</p>
+                <p className="text-[10px] text-white/25 mt-0.5">{desc}</p>
+              </div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* How It Works - Timeline */}
       <section className="relative py-28 border-t border-white/[0.04]">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <motion.div
@@ -399,31 +412,25 @@ export function HomePage() {
             viewport={{ once: true }}
             className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start"
           >
-            {/* Left - Label + Steps */}
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] text-xs text-white/30 mb-5">
                 <Zap className="w-3 h-3" />
-                How it works
+                Como funciona
               </div>
               <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-[0.95] mb-4">
-                Get started in
+                Empeza en
                 <br />
-                <span className="text-white/40">three simple steps</span>
+                <span className="text-white/40">tres simples pasos</span>
               </h2>
               <p className="text-white/30 leading-relaxed max-w-sm">
-                No credit card required. No complicated setup. Just you, your links, and your audience.
+                Sin tarjeta de credito. Sin configuracion complicada. Solo vos, tus links y tu audiencia.
               </p>
             </div>
 
-            {/* Right - Steps */}
             <div className="relative">
               <div className="absolute left-[19px] top-3 bottom-3 w-px bg-gradient-to-b from-keef-500/40 via-pink-500/20 to-transparent" />
               <div className="space-y-12">
-                {[
-                  { step: '01', icon: Users, title: 'landing.howto1' as const, desc: 'landing.howto1Desc' as const },
-                  { step: '02', icon: Link2, title: 'landing.howto2' as const, desc: 'landing.howto2Desc' as const },
-                  { step: '03', icon: ExternalLink, title: 'landing.howto3' as const, desc: 'landing.howto3Desc' as const },
-                ].map(({ step, icon: Icon, title, desc }, i) => (
+                {steps.map(({ step, icon: Icon, title, desc }, i) => (
                   <motion.div
                     key={step}
                     initial={{ opacity: 0, x: 20 }}
@@ -435,8 +442,8 @@ export function HomePage() {
                     <div className="absolute left-0 top-0 w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-xs font-bold text-white/30">
                       {step}
                     </div>
-                    <h3 className="text-lg font-semibold text-white mb-1.5">{t(title)}</h3>
-                    <p className="text-sm text-white/30 leading-relaxed">{t(desc)}</p>
+                    <h3 className="text-lg font-semibold text-white mb-1.5">{title}</h3>
+                    <p className="text-sm text-white/30 leading-relaxed">{desc}</p>
                   </motion.div>
                 ))}
               </div>
@@ -445,7 +452,6 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Premium Section */}
       <section className="relative py-28 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.06),transparent_60%)]" />
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative">
@@ -457,22 +463,18 @@ export function HomePage() {
           >
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-keef-500/10 to-pink-500/10 border border-keef-500/20 text-xs text-keef-400 mb-6">
               <Sparkles className="w-3 h-3" />
-              {t('landing.premiumTag')}
+              Premium
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-[0.95] mb-4">
-              {t('home.premium.title')}
+              Desbloquea el maximo potencial
             </h2>
             <p className="text-white/40 text-lg max-w-xl mx-auto">
-              {t('home.premium.subtitle')}
+              Funciones exclusivas para llevar tu perfil al siguiente nivel
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              { icon: Sparkles, title: 'home.premium.themes.title' as const, desc: 'home.premium.themes.desc' as const, gradient: 'from-keef-500 to-purple-500' },
-              { icon: Shield, title: 'home.premium.branding.title' as const, desc: 'home.premium.branding.desc' as const, gradient: 'from-pink-500 to-rose-500' },
-              { icon: Zap, title: 'home.premium.css.title' as const, desc: 'home.premium.css.desc' as const, gradient: 'from-sky-500 to-cyan-500' },
-            ].map(({ icon: Icon, title, desc, gradient }, i) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {premiumFeatures.map(({ icon: Icon, title, desc, gradient }, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -484,8 +486,8 @@ export function HomePage() {
                 <div className={`w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-5 shadow-xl shadow-keef-500/10 group-hover:scale-105 transition-transform duration-300`}>
                   <Icon className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{t(title)}</h3>
-                <p className="text-sm text-white/30 leading-relaxed">{t(desc)}</p>
+                <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
+                <p className="text-sm text-white/30 leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </div>
@@ -498,7 +500,7 @@ export function HomePage() {
           >
             <Link to="/premium">
               <Button variant="premium" size="lg" className="text-base px-8 py-4 bg-gradient-to-r from-keef-500 to-pink-500 hover:from-keef-600 hover:to-pink-600 text-white rounded-2xl shadow-xl shadow-keef-500/20 group border-0">
-                <span>{t('home.premium.cta')}</span>
+                <span>Ver planes premium</span>
                 <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" />
               </Button>
             </Link>
@@ -506,7 +508,6 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Final CTA */}
       <section className="relative py-32 border-t border-white/[0.04] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-keef-500/[0.02] via-transparent to-transparent" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-keef-500/5 rounded-full blur-[120px]" />
@@ -534,14 +535,11 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="border-t border-white/[0.04] py-12">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.03] flex items-center justify-center">
-                <span className="text-white font-black text-xs">K</span>
-              </div>
+              <img src="/logo-keef.png" alt="Keef" className="w-7 h-7" />
               <span className="text-sm font-semibold text-white/60">Keef</span>
             </div>
             <p className="text-sm text-white/20">{t('home.footer')}</p>

@@ -32,8 +32,11 @@ export function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 border-b border-border/50 bg-surface/80 backdrop-blur-xl">
       <div className="container-main flex items-center justify-between h-16">
-        <Link to="/" className="flex items-center gap-2 text-xl font-bold">
-          <span className="gradient-text">Keef</span>
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/logo-keef.png" alt="Keef" className="w-7 h-7" />
+          <span className="text-xl font-bold">
+            <span className="gradient-text">Keef</span>
+          </span>
           <span className="hidden sm:inline text-text-secondary font-normal text-sm">/ {t('nav.tagline')}</span>
         </Link>
 
