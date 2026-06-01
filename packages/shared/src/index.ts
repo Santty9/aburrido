@@ -3,6 +3,7 @@ export type ThemeType = 'dark' | 'light' | 'neon' | 'cyber' | 'minimal' | 'retro
 export type PlanType = 'free' | 'premium' | 'pro'
 export type ChangelogType = 'feature' | 'fix' | 'improvement'
 export type LinkIcon = 'globe' | 'github' | 'twitter' | 'instagram' | 'youtube' | 'discord' | 'tiktok' | 'twitch' | 'linkedin' | 'spotify' | 'custom'
+export type BlockType = 'hero' | 'links' | 'gallery' | 'embed' | 'text' | 'cta' | 'divider'
 
 // ========== Profile ==========
 export interface Profile {
@@ -23,6 +24,7 @@ export interface Profile {
   badge_ids?: string[]
   verification_status: VerificationStatus
   trust_score: number
+  blocks: Block[]
   created_at: string
   updated_at: string
 }
@@ -85,6 +87,8 @@ export interface ThemeConfig {
   lead_form_button_text: string
   profile_password: string | null
   custom_css: string | null
+  presentation_mode: boolean
+  presentation_interval: number
   schedule: ThemeSchedule
 }
 
@@ -109,6 +113,14 @@ export interface AffiliateSettings {
   commission_rate: number | null
   network: string | null
   cloaked_url: string | null
+}
+
+export interface Block {
+  id: string
+  type: BlockType
+  position: number
+  data: Record<string, unknown>
+  is_active: boolean
 }
 
 export interface Badge {
@@ -141,6 +153,7 @@ export interface PublicProfile {
   avatar_url: string | null
   theme: ThemeConfig
   links: Link[]
+  blocks: Block[]
   is_premium: boolean
   is_verified: boolean
   badges: Badge[]
@@ -317,6 +330,8 @@ export const DEFAULT_THEME: ThemeConfig = {
   lead_form_button_text: 'Enviar',
   profile_password: null,
   custom_css: null,
+  presentation_mode: false,
+  presentation_interval: 5,
   schedule: {
     enabled: false,
     day_theme: null,

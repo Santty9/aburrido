@@ -5,10 +5,10 @@ import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/ca
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/useAuth'
 import { useLanguage } from '@/hooks/useLanguage'
-import { profileApi } from '@/lib/api'
-import type { ThemeConfig, ThemeType } from '@aburrido/shared'
+import { profileApi, blockApi, linkApi } from '@/lib/api'
+import type { ThemeConfig, ThemeType, Block } from '@aburrido/shared'
 import { DEFAULT_THEME, THEMES, iconMap } from '@aburrido/shared'
-import { Save, Palette, Eye, Image, Sliders, Code, Check, Monitor, Smartphone, Undo2, Music, Volume2, Film, ExternalLink, ChevronDown, MousePointerClick, Globe, Sparkles, Zap, Heart, VolumeX, Sparkle, Paintbrush } from 'lucide-react'
+import { Save, Palette, Eye, Image, Sliders, Code, Check, Monitor, Smartphone, Undo2, Music, Volume2, Film, ExternalLink, ChevronDown, MousePointerClick, Globe, Sparkles, Zap, Heart, VolumeX, Sparkle, Paintbrush, Plus, Trash2, MoveUp, MoveDown, Type, Link2, Video, LayoutGrid, Wand2 } from 'lucide-react'
 
 const FONTS = ['Inter', 'JetBrains Mono', 'Arial', 'Helvetica', 'Georgia', 'Times New Roman', 'Courier New', 'Verdana', 'Trebuchet MS', 'Impact']
 
@@ -266,8 +266,11 @@ function ProfilePreview({ theme, profile }: { theme: ThemeConfig; profile: { use
 export function PersonalizationPage() {
   const { profile, checkAuth } = useAuth()
   const [theme, setTheme] = useState<ThemeConfig>(() => ({ ...DEFAULT_THEME, ...(profile?.theme || {}) }) as ThemeConfig)
+  const [blocks, setBlocks] = useState<Block[]>(() => [...(profile?.blocks || [])])
   const [isSaving, setIsSaving] = useState(false)
-  const [activeTab, setActiveTab] = useState<'presets' | 'colors' | 'layout' | 'decorations' | 'advanced'>('presets')
+  const [isSavingBlocks, setIsSavingBlocks] = useState(false)
+  const [blocksMessage, setBlocksMessage] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'presets' | 'colors' | 'layout' | 'decorations' | 'advanced' | 'blocks'>('presets')
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop')
   const { t } = useLanguage()
 
@@ -290,7 +293,8 @@ export function PersonalizationPage() {
 
   useEffect(() => {
     if (profile?.theme) setTheme({ ...DEFAULT_THEME, ...profile.theme } as ThemeConfig)
-  }, [profile?.theme])
+    if (profile?.blocks) setBlocks([...profile.blocks])
+  }, [profile?.theme, profile?.blocks])
 
   const applyThemePreset = (type: ThemeType) => {
     const preset = THEMES[type]
@@ -346,6 +350,7 @@ export function PersonalizationPage() {
     { id: 'layout' as const, label: t('personalization.tab.layout'), icon: Sliders },
     { id: 'decorations' as const, label: 'Decoraciones', icon: Sparkle },
     { id: 'advanced' as const, label: t('personalization.tab.advanced'), icon: Code },
+    { id: 'blocks' as const, label: 'Bloques', icon: LayoutGrid },
   ]
 
   return (
@@ -1149,8 +1154,256 @@ export function PersonalizationPage() {
                 </Card>
               </div>
             )}
-          </div>
 
+            {/* Tab: Blocks */}
+            {activeTab === 'blocks' && (
+              <div className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Bloques</CardTitle>
+                        <CardDescription>Agregá y organizá secciones de tu perfil</CardDescription>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={async () => {
+                            const res = await linkApi.getAll()
+                            if (!res.success || !res.data) return
+                            const links = res.data
+                            const catMap: Record<string, string> = {
+                              'github.com': 'Desarrollo', 'youtube.com': 'Video', 'twitter.com': 'Social',
+                              'instagram.com': 'Social', 'tiktok.com': 'Video', 'linkedin.com': 'Profesional',
+                              'spotify.com': 'Música', 'twitch.tv': 'Streaming', 'discord.com': 'Comunidad',
+                            }
+                            const iconSuggestion: Record<string, string> = {
+                              'github.com': '🐙', 'youtube.com': '📺', 'twitter.com': '🐦',
+                              'instagram.com': '📷', 'tiktok.com': '🎵', 'linkedin.com': '💼',
+                              'spotify.com': '🎧', 'twitch.tv': '🎮', 'discord.com': '💬',
+                            }
+                            for (const link of links) {
+                              const url = link.url.toLowerCase()
+                              let category = ''
+                              let icon = ''
+                              for (const [domain, cat] of Object.entries(catMap)) {
+                                if (url.includes(domain)) { category = cat; icon = iconSuggestion[domain] || ''; break }
+                              }
+                              await linkApi.update(link.id, { category, icon: icon ? 'custom' as any : link.icon, icon_url: icon || link.icon_url })
+                            }
+                            const cats = [...new Set(links.map((l) => {
+                              const url = l.url.toLowerCase()
+                              for (const [domain, cat] of Object.entries(catMap)) { if (url.includes(domain)) return cat }
+                              return ''
+                            }).filter(Boolean))]
+                            if (cats.length) await profileApi.update({} as any)
+                            setBlocksMessage('Links organizados automáticamente')
+                            setTimeout(() => setBlocksMessage(null), 3000)
+                          }}
+                        >
+                          <Wand2 className="w-4 h-4" />
+                          Auto-organizar
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <div className="space-y-3">
+                    {blocksMessage && (
+                      <div className="px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-xl text-sm text-green-400">
+                        {blocksMessage}
+                      </div>
+                    )}
+                    {blocks.length === 0 ? (
+                      <div className="py-8 text-center">
+                        <LayoutGrid className="w-12 h-12 text-text-secondary mx-auto mb-3" />
+                        <p className="text-text-secondary text-sm">No hay bloques todavía. Agregá tu primer bloque.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {blocks.sort((a, b) => a.position - b.position).map((block, index) => (
+                          <div key={block.id} className="p-4 bg-surface-3 rounded-xl border border-border space-y-3">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-mono text-text-secondary w-5">{index + 1}</span>
+                                <span className="text-sm font-medium capitalize">{block.type}</span>
+                                {!block.is_active && <span className="text-[10px] px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">Inactivo</span>}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <button
+                                  onClick={() => {
+                                    const updated = [...blocks]
+                                    const idx = updated.findIndex((b) => b.id === block.id)
+                                    if (idx > 0) { const a = updated[idx - 1]; const b = updated[idx]; if (a && b) { updated[idx - 1] = b; updated[idx] = a; updated.forEach((bi, i) => (bi.position = i)); setBlocks(updated) } }
+                                  }}
+                                  disabled={index === 0}
+                                  className="p-1.5 rounded-lg text-text-secondary hover:text-white hover:bg-surface-2 disabled:opacity-30 transition-all"
+                                >
+                                  <MoveUp className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    const updated = [...blocks]
+                                    const idx = updated.findIndex((b) => b.id === block.id)
+                                    if (idx < updated.length - 1) { const a = updated[idx]; const b = updated[idx + 1]; if (a && b) { updated[idx] = b; updated[idx + 1] = a; updated.forEach((bi, i) => (bi.position = i)); setBlocks(updated) } }
+                                  }}
+                                  disabled={index === blocks.length - 1}
+                                  className="p-1.5 rounded-lg text-text-secondary hover:text-white hover:bg-surface-2 disabled:opacity-30 transition-all"
+                                >
+                                  <MoveDown className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    const idx = blocks.findIndex((b) => b.id === block.id)
+                                    setBlocks((prev) => { const updated = prev.filter((_, i) => i !== idx); updated.forEach((b, i) => (b.position = i)); return updated })
+                                  }}
+                                  className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <select
+                                value={block.type}
+                                onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, type: e.target.value as Block['type'], data: {} } : b))}
+                                className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500"
+                              >
+                                <option value="hero">Hero</option>
+                                <option value="links">Links</option>
+                                <option value="gallery">Galería</option>
+                                <option value="embed">Embed</option>
+                                <option value="text">Texto</option>
+                                <option value="cta">CTA</option>
+                                <option value="divider">Divisor</option>
+                              </select>
+                              <label className="flex items-center gap-2 text-xs text-text-secondary cursor-pointer">
+                                <div className={`relative w-9 h-5 rounded-full transition-colors ${block.is_active ? 'bg-aburrido-500' : 'bg-border'}`}>
+                                  <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${block.is_active ? 'translate-x-4' : ''}`} />
+                                  <input type="checkbox" checked={block.is_active} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, is_active: e.target.checked } : b))} className="sr-only" />
+                                </div>
+                                Activo
+                              </label>
+                            </div>
+                            {/* Block type-specific data editors */}
+                            {block.type === 'hero' && (
+                              <div className="space-y-2 pt-1">
+                                <input type="text" placeholder="URL del avatar" value={(block.data.avatarUrl as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, avatarUrl: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                                <input type="text" placeholder="Nombre a mostrar" value={(block.data.displayName as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, displayName: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                                <textarea placeholder="Biografía" value={(block.data.bio as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, bio: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500 resize-none" rows={2} />
+                              </div>
+                            )}
+                            {block.type === 'links' && (
+                              <div className="space-y-2 pt-1">
+                                <input type="text" placeholder="Título de la sección" value={(block.data.title as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, title: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                                <p className="text-xs text-text-secondary">Los links se mostrarán automáticamente desde tu lista de links.</p>
+                              </div>
+                            )}
+                            {block.type === 'gallery' && (
+                              <div className="space-y-2 pt-1">
+                                <div className="flex items-center gap-2">
+                                  <input type="text" placeholder="URL de imagen" className="flex-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500"
+                                    value={''}
+                                    onChange={(e) => {
+                                      const input = e.target
+                                      const val = input.value
+                                      if (val && val.endsWith('.') === false && val.length > 5) {
+                                        setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, images: [...((b.data.images as string[]) || []), val] } } : b))
+                                        input.value = ''
+                                      }
+                                    }}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                                        const val = e.currentTarget.value.trim()
+                                        setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, images: [...((b.data.images as string[]) || []), val] } } : b))
+                                        e.currentTarget.value = ''
+                                      }
+                                    }}
+                                  />
+                                  <Image className="w-4 h-4 text-text-secondary shrink-0" />
+                                </div>
+                                {(block.data.images as string[] || []).length > 0 && (
+                                  <div className="grid grid-cols-4 gap-2">
+                                    {(block.data.images as string[] || []).map((img, i) => (
+                                      <div key={i} className="relative group aspect-square rounded-lg overflow-hidden bg-surface-2 border border-border">
+                                        <img src={img} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                                        <button onClick={() => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, images: (b.data.images as string[] || []).filter((_, j) => j !== i) } } : b))} className="absolute top-0.5 right-0.5 p-0.5 bg-red-500/80 rounded text-white opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 className="w-3 h-3" /></button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {block.type === 'embed' && (
+                              <div className="space-y-2 pt-1">
+                                <input type="url" placeholder="URL del embed (YouTube, Spotify, etc.)" value={(block.data.url as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, url: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                              </div>
+                            )}
+                            {block.type === 'text' && (
+                              <div className="space-y-2 pt-1">
+                                <textarea placeholder="Contenido del texto (Markdown)" value={(block.data.content as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, content: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500 resize-none" rows={3} />
+                              </div>
+                            )}
+                            {block.type === 'cta' && (
+                              <div className="space-y-2 pt-1">
+                                <input type="text" placeholder="Texto del botón" value={(block.data.text as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, text: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                                <input type="url" placeholder="URL de destino" value={(block.data.url as string) || ''} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, url: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500" />
+                                <select value={(block.data.style as string) || 'primary'} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, style: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500">
+                                  <option value="primary">Primario</option>
+                                  <option value="secondary">Secundario</option>
+                                  <option value="outline">Outline</option>
+                                </select>
+                              </div>
+                            )}
+                            {block.type === 'divider' && (
+                              <div className="space-y-2 pt-1">
+                                <select value={(block.data.style as string) || 'line'} onChange={(e) => setBlocks((prev) => prev.map((b) => b.id === block.id ? { ...b, data: { ...b.data, style: e.target.value } } : b))} className="w-full px-3 py-2 bg-surface-2 border border-border rounded-lg text-white text-sm focus:outline-none focus:border-aburrido-500">
+                                  <option value="line">Línea</option>
+                                  <option value="dots">Puntos</option>
+                                  <option value="glow">Brillo</option>
+                                </select>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <Button
+                      variant="secondary"
+                      className="w-full"
+                      onClick={() => {
+                        const newBlock: Block = {
+                          id: crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+                          type: 'hero',
+                          position: blocks.length,
+                          data: {},
+                          is_active: true,
+                        }
+                        setBlocks((prev) => [...prev, newBlock])
+                      }}
+                    >
+                      <Plus className="w-4 h-4" /> Agregar bloque
+                    </Button>
+                  </div>
+                </Card>
+                <div className="flex justify-end">
+                  <Button
+                    isLoading={isSavingBlocks}
+                    onClick={async () => {
+                      setIsSavingBlocks(true)
+                      await blockApi.update(blocks)
+                      setIsSavingBlocks(false)
+                      setBlocksMessage('Bloques guardados correctamente')
+                      setTimeout(() => setBlocksMessage(null), 3000)
+                    }}
+                  >
+                    <Save className="w-4 h-4" /> Guardar bloques
+                  </Button>
+                </div>
+              </div>
+            )}
+
+          </div>
           {/* Right: Real Preview */}
           <div className="lg:col-span-2">
             <Card className="sticky top-24">

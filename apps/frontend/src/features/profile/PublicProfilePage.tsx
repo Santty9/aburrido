@@ -2,13 +2,13 @@ import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { iconMap, DEFAULT_THEME } from '@aburrido/shared'
-import type { PublicProfile } from '@aburrido/shared'
+import type { PublicProfile, Block } from '@aburrido/shared'
 import { profileApi, linkApi } from '@/lib/api'
 import { QRCode } from '@/components/QRCode'
 import {
   ExternalLink, ChevronDown, Share2, Copy, Check, Eye, MousePointerClick,
   Sparkles, Zap, Heart, Globe, Volume2, VolumeX, Download, Music, Film,
-  Loader2, ArrowUpRight, Lock
+  Loader2, ArrowUpRight, Lock, X, ChevronLeft, ChevronRight
 } from 'lucide-react'
 import { useLanguage } from '@/hooks/useLanguage'
 
@@ -202,6 +202,318 @@ function MediaBackground({ theme, muted }: { theme: any; muted: boolean }) {
   return null
 }
 
+function LinkListItem({
+  link, theme, isPremium, isGlass, glassBlur, btnRadius, variant = 'default',
+  hoveredLink, setHoveredLink, handleClick, index = 0,
+  showDivider = false, dividerType = 'none',
+}: {
+  link: any
+  theme: any
+  isPremium: boolean
+  isGlass: boolean
+  glassBlur: string
+  btnRadius: string
+  variant?: 'default' | 'category'
+  hoveredLink: string | null
+  setHoveredLink: (id: string | null) => void
+  handleClick: (id: string) => void
+  index?: number
+  showDivider?: boolean
+  dividerType?: string
+}) {
+  const isDefault = variant === 'default'
+  const catRadius = theme.button_style === 'pill' ? '9999px' : theme.button_style === 'sharp' ? '8px' : '14px'
+
+  return (
+    <div>
+      {isDefault ? (
+        <motion.a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => handleClick(link.id)}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 + index * 0.06, type: 'spring', damping: 20 }}
+          whileHover={{ scale: link.featured ? 1.03 : 1.02, y: link.featured ? -2 : -1 }}
+          whileTap={{ scale: 0.98 }}
+          onHoverStart={() => setHoveredLink(link.id)}
+          onHoverEnd={() => setHoveredLink(null)}
+          className="relative flex items-center gap-3.5 w-full px-5 py-4 overflow-hidden group transition-shadow"
+          style={{
+            background: isGlass ? 'rgba(255,255,255,0.06)' : theme.button_color,
+            color: theme.button_text_color,
+            borderRadius: btnRadius,
+            backdropFilter: isGlass ? `blur(${glassBlur})` : 'none',
+            border: isGlass ? '1px solid rgba(255,255,255,0.08)' : `1px solid ${theme.text_color}08`,
+            boxShadow: hoveredLink === link.id ? `0 4px 20px ${theme.shadow_color || theme.accent_color}30` : (theme.link_shadow && theme.link_shadow !== 'none' ? `0 4px 12px ${theme.shadow_color || '#000'}${theme.link_shadow === 'soft' ? '15' : theme.link_shadow === 'medium' ? '25' : '40'}` : `0 1px 4px rgba(0,0,0,0.1)${theme.glow_intensity === 'strong' ? ', 0 0 20px ' + theme.accent_color + '15' : ''}`),
+            fontFamily: theme.font,
+          }}
+        >
+          <motion.div
+            className="absolute inset-0 rounded-2xl transition-all duration-300"
+            style={{
+              background: isPremium
+                ? `linear-gradient(135deg, ${theme.accent_color}12, transparent 60%)`
+                : `${theme.text_color}03`,
+              opacity: hoveredLink === link.id ? 1 : 0,
+            }}
+          />
+
+          {isPremium && (
+            <motion.div
+              className="absolute inset-0 rounded-2xl pointer-events-none"
+              animate={{
+                background: [
+                  `linear-gradient(135deg, ${theme.accent_color}00, ${theme.accent_color}18, ${theme.accent_color}00)`,
+                  `linear-gradient(135deg, ${theme.accent_color}18, ${theme.accent_color}00, ${theme.accent_color}18)`,
+                  `linear-gradient(135deg, ${theme.accent_color}00, ${theme.accent_color}18, ${theme.accent_color}00)`,
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ padding: '1px' }}
+            >
+              <div className="w-full h-full rounded-2xl" style={{ background: 'inherit' }} />
+            </motion.div>
+          )}
+
+          {link.thumbnail_url ? (
+            <img src={link.thumbnail_url} alt="" className="w-6 h-6 rounded object-cover" />
+          ) : (
+            <span className="text-base">{iconMap[link.icon as keyof typeof iconMap] || '🌐'}</span>
+          )}
+
+          {link.featured && (
+            <div className="absolute -top-1 left-0 right-0 flex justify-center z-20">
+              <span className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ background: theme.accent_color, color: '#fff' }}>
+                Destacado
+              </span>
+            </div>
+          )}
+
+          <div className="relative flex-1 z-10 min-w-0">
+            <span className="block font-semibold tracking-tight truncate" style={{ fontSize: theme.link_font_size === 'xs' ? '0.75rem' : theme.link_font_size === 'base' ? '1rem' : '0.875rem' }}>
+              {link.title}
+            </span>
+            {theme.show_link_url_preview && hoveredLink === link.id && (
+              <span className="block text-[10px] truncate mt-0.5 font-mono" style={{ opacity: 0.4 }}>
+                {link.url}
+              </span>
+            )}
+          </div>
+
+          <motion.span
+            className="relative text-[10px] font-mono z-10"
+            style={{ opacity: 0.25 }}
+            animate={{ opacity: hoveredLink === link.id ? 0.6 : 0.25 }}
+          >
+            {link.clicks}
+          </motion.span>
+
+          <motion.div
+            className="relative z-10"
+            animate={{ x: hoveredLink === link.id ? 3 : 0, opacity: hoveredLink === link.id ? 0.6 : 0.2 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+          </motion.div>
+        </motion.a>
+      ) : (
+        <motion.a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => handleClick(link.id)}
+          initial={{ opacity: 0, x: -12 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.05 }}
+          whileHover={{ scale: 1.015, x: 3 }}
+          whileTap={{ scale: 0.98 }}
+          onHoverStart={() => setHoveredLink(link.id)}
+          onHoverEnd={() => setHoveredLink(null)}
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all duration-200 group"
+          style={{
+            background: isGlass ? 'rgba(255,255,255,0.04)' : theme.button_color,
+            color: theme.button_text_color,
+            borderRadius: catRadius,
+            backdropFilter: isGlass ? `blur(${glassBlur})` : undefined,
+            border: isGlass ? '1px solid rgba(255,255,255,0.05)' : `1px solid ${theme.text_color}06`,
+            fontFamily: theme.font,
+          }}
+        >
+          {link.thumbnail_url ? (
+            <img src={link.thumbnail_url} alt="" className="w-6 h-6 rounded object-cover" />
+          ) : (
+            <span className="text-base">{iconMap[link.icon as keyof typeof iconMap] || '🌐'}</span>
+          )}
+          <div className="flex-1 min-w-0">
+            <span className="block text-sm font-medium truncate">{link.title}</span>
+            {theme.show_link_url_preview && hoveredLink === link.id && (
+              <span className="block text-[10px] truncate mt-0.5 font-mono" style={{ opacity: 0.4 }}>
+                {link.url}
+              </span>
+            )}
+          </div>
+          <motion.span
+            className="text-[10px] font-mono"
+            style={{ opacity: 0.2 }}
+            animate={{ opacity: hoveredLink === link.id ? 0.5 : 0.2 }}
+          >
+            {link.clicks}
+          </motion.span>
+          <ExternalLink className="w-3 h-3 shrink-0" style={{ opacity: 0.25 }} />
+        </motion.a>
+      )}
+
+      {showDivider && dividerType !== 'none' && (
+        <div className="flex justify-center py-1">
+          {dividerType === 'line' && <div className="w-8 h-px" style={{ background: theme.text_color + '15' }} />}
+          {dividerType === 'dots' && <div className="flex gap-1"><div className="w-1 h-1 rounded-full" style={{ background: theme.text_color + '30' }} /><div className="w-1 h-1 rounded-full" style={{ background: theme.text_color + '15' }} /></div>}
+          {dividerType === 'glow' && <div className="w-16 h-px" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent_color}30, transparent)` }} />}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function PresentationMode({
+  blocks, theme, onExit, renderBlock,
+}: {
+  blocks: Block[]
+  theme: any
+  onExit: () => void
+  renderBlock: (block: Block) => React.ReactNode
+}) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [direction, setDirection] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const indexRef = useRef(currentIndex)
+  indexRef.current = currentIndex
+
+  const goToNext = useCallback(() => {
+    if (indexRef.current >= blocks.length - 1) return
+    setDirection(1)
+    setCurrentIndex(prev => prev + 1)
+    setProgress(0)
+  }, [blocks.length])
+
+  const goToPrev = useCallback(() => {
+    if (indexRef.current <= 0) return
+    setDirection(-1)
+    setCurrentIndex(prev => prev - 1)
+    setProgress(0)
+  }, [])
+
+  useEffect(() => {
+    if (blocks.length <= 1) return
+
+    const seconds = theme.presentation_interval || 5
+    const tickMs = 50
+    const totalTicks = Math.max(1, Math.floor((seconds * 1000) / tickMs))
+    let tick = 0
+
+    const id = setInterval(() => {
+      tick++
+      const pct = Math.min(1, tick / totalTicks)
+      setProgress(pct)
+      if (tick >= totalTicks && indexRef.current < blocks.length - 1) {
+        setDirection(1)
+        setCurrentIndex(prev => prev + 1)
+      }
+    }, tickMs)
+
+    return () => clearInterval(id)
+  }, [blocks.length, theme.presentation_interval])
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goToNext()
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goToPrev()
+      if (e.key === 'Escape') onExit()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [goToNext, goToPrev, onExit])
+
+  const variants = {
+    enter: (d: number) => ({ x: d > 0 ? 300 : -300, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (d: number) => ({ x: d > 0 ? -300 : 300, opacity: 0 }),
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] flex flex-col" style={{ background: theme.background, color: theme.text_color }}>
+      <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-10">
+        <motion.div
+          className="h-full"
+          style={{ background: theme.accent_color }}
+          animate={{ width: `${progress * 100}%` }}
+          transition={{ duration: 0.05 }}
+        />
+      </div>
+
+      <button
+        onClick={onExit}
+        className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-2xl"
+        style={{
+          background: `${theme.text_color}10`,
+          border: `1px solid ${theme.text_color}15`,
+          color: theme.text_color,
+        }}
+      >
+        <X className="w-5 h-5" />
+      </button>
+
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-8">
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={blocks[currentIndex]?.id || 'empty'}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            className="w-full max-w-md"
+          >
+            {blocks[currentIndex] && renderBlock(blocks[currentIndex])}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="flex items-center justify-center gap-4 p-4 pb-8">
+        <button
+          onClick={goToPrev}
+          disabled={currentIndex === 0}
+          className="w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-30 transition-all"
+          style={{
+            background: `${theme.text_color}10`,
+            border: `1px solid ${theme.text_color}15`,
+            color: theme.text_color,
+          }}
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <span className="text-sm font-mono" style={{ opacity: 0.6 }}>
+          {currentIndex + 1} / {blocks.length}
+        </span>
+        <button
+          onClick={goToNext}
+          disabled={currentIndex === blocks.length - 1}
+          className="w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-30 transition-all"
+          style={{
+            background: `${theme.text_color}10`,
+            border: `1px solid ${theme.text_color}15`,
+            color: theme.text_color,
+          }}
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function PublicProfilePage() {
   const { t } = useLanguage()
   const { username } = useParams<{ username: string }>()
@@ -219,6 +531,7 @@ export function PublicProfilePage() {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [passwordInput, setPasswordInput] = useState('')
   const [passwordError, setPasswordError] = useState(false)
+  const [presentationActive, setPresentationActive] = useState(false)
 
   const profileUrl = window.location.href
 
@@ -314,6 +627,360 @@ export function PublicProfilePage() {
   const glassBlur = blurMap[(theme.glass_blur || 'medium') as keyof typeof blurMap]
 
   const btnRadius = theme.button_style === 'pill' ? '9999px' : theme.button_style === 'sharp' ? '10px' : '16px'
+
+  const hasBlocks = profile.blocks && profile.blocks.length > 0
+
+  const activeBlocks = useMemo(() => {
+    if (!hasBlocks) return []
+    return profile.blocks
+      .filter(b => b.is_active)
+      .sort((a, b) => a.position - b.position)
+  }, [profile.blocks, hasBlocks])
+
+  const shouldAutoPresent = hasBlocks && theme.presentation_mode && !theme.profile_password
+
+  useEffect(() => {
+    if (shouldAutoPresent) {
+      setPresentationActive(true)
+    }
+  }, [shouldAutoPresent])
+
+  const renderBlockContent = useCallback((block: Block) => {
+    const data = block.data || {}
+
+    switch (block.type) {
+      case 'hero':
+        return (
+          <>
+            {theme.show_avatar && (
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', damping: 15, stiffness: 200, delay: 0.1 }}
+                className="relative group"
+              >
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  animate={{
+                    boxShadow: [
+                      `0 0 25px ${theme.accent_color}30, 0 0 50px ${theme.accent_color}10`,
+                      `0 0 35px ${theme.accent_color}50, 0 0 70px ${theme.accent_color}20`,
+                      `0 0 25px ${theme.accent_color}30, 0 0 50px ${theme.accent_color}10`,
+                    ],
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <div
+                  className={`rounded-full overflow-hidden relative ${theme.avatar_size === 'lg' ? 'w-28 h-28' : theme.avatar_size === 'sm' ? 'w-16 h-16' : 'w-24 h-24'}`}
+                  style={{
+                    boxShadow: `0 0 40px ${theme.accent_color}30, 0 0 80px ${theme.accent_color}10`,
+                    border: `3px solid ${theme.accent_color}50`,
+                  }}
+                >
+                  {profile.avatar_url ? (
+                    <>
+                      <motion.img
+                        src={profile.avatar_url}
+                        alt={profile.display_name || username}
+                        className="w-full h-full object-cover"
+                        style={{ opacity: avatarLoaded ? 1 : 0 }}
+                        onLoad={() => setAvatarLoaded(true)}
+                        initial={{ scale: 1.1 }}
+                        animate={avatarLoaded ? { scale: 1 } : {}}
+                        transition={{ duration: 0.5 }}
+                      />
+                      {!avatarLoaded && (
+                        <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${theme.accent_color}, ${theme.accent_color}66)` }}>
+                          <Loader2 className="w-6 h-6 text-white/50 animate-spin" />
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div
+                      className="w-full h-full flex items-center justify-center text-4xl font-black select-none"
+                      style={{
+                        background: `linear-gradient(135deg, ${theme.accent_color}, ${theme.accent_color}77)`,
+                        textShadow: '0 2px 10px rgba(0,0,0,0.3)',
+                      }}
+                    >
+                      {(profile.display_name || username || '?')[0]?.toUpperCase()}
+                    </div>
+                  )}
+                  {isPremium && (
+                    <motion.div
+                      className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+                      style={{
+                        background: `linear-gradient(135deg, #f59e0b, #d97706)`,
+                        border: '2px solid rgba(0,0,0,0.3)',
+                      }}
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
+                    >
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-center space-y-2"
+            >
+              <div className="flex items-center justify-center gap-2">
+                <h1
+                  className={`${
+                    theme.title_font_size === 'sm' ? 'text-xl sm:text-2xl' :
+                    theme.title_font_size === 'md' ? 'text-2xl sm:text-3xl' :
+                    theme.title_font_size === 'lg' ? 'text-3xl sm:text-4xl' :
+                    'text-4xl sm:text-5xl'
+                  } font-black tracking-tight leading-tight ${
+                    theme.title_style === 'gradient' ? 'bg-gradient-to-r from-white via-aburrido-300 to-white bg-clip-text text-transparent' :
+                    theme.title_style === 'shadow' ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]' :
+                    theme.title_style === 'outline' ? 'text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.8)]' : ''
+                  }`}
+                  style={{
+                    ...(theme.show_gradient_text ? { background: `linear-gradient(135deg, ${theme.accent_color}, #ffffff)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : {}),
+                    textShadow: `0 2px 20px rgba(0,0,0,0.3)`,
+                    fontFamily: theme.font,
+                  }}
+                >
+                  {profile.display_name || username}
+                </h1>
+                {profile.is_verified && theme.show_verification_badge && theme.badge_style !== 'none' && (
+                  <motion.div
+                    initial={{ scale: 0, rotate: -90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 0.25, type: 'spring', stiffness: 200 }}
+                    className={`${theme.badge_style === 'glow' ? 'w-7 h-7 shadow-lg shadow-aburrido-500/60 animate-pulse' : theme.badge_style === 'minimal' ? 'w-5 h-5 bg-aburrido-500/80' : 'w-6 h-6 shadow-lg shadow-aburrido-500/40'} rounded-full bg-aburrido-500 flex items-center justify-center`}
+                    title="Verificado"
+                  >
+                    <Check className="w-3.5 h-3.5 text-white" />
+                  </motion.div>
+                )}
+              </div>
+
+              {theme.show_bio && profile.bio && (
+                <motion.div
+                  className="text-sm leading-relaxed max-w-xs mx-auto font-light"
+                  style={{ opacity: 0.75, fontFamily: theme.font }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 0.75, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(profile.bio) }}
+                />
+              )}
+
+              {isPremium && (
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.4, type: 'spring' }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.accent_color}25, ${theme.accent_color}08)`,
+                    border: `1px solid ${theme.accent_color}35`,
+                    color: theme.accent_color,
+                    backdropFilter: 'blur(10px)',
+                  }}
+                >
+                  <Sparkles className="w-3 h-3" />
+                  {t('profile.premium.badge')}
+                </motion.div>
+              )}
+            </motion.div>
+          </>
+        )
+
+      case 'links':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            className="w-full space-y-3 mt-1"
+          >
+            {Object.entries(groupedLinks).map(([category, links]) => {
+              const isDefault = category === '__default__'
+              const isExpanded = expandedCategories.has(category)
+
+              if (isDefault) {
+                return (
+                  <div key="__default" className="space-y-2.5">
+                    {links.map((link, i) => (
+                      <LinkListItem
+                        key={link.id}
+                        link={link}
+                        theme={theme}
+                        isPremium={isPremium}
+                        isGlass={isGlass}
+                        glassBlur={glassBlur}
+                        btnRadius={btnRadius}
+                        variant="default"
+                        hoveredLink={hoveredLink}
+                        setHoveredLink={setHoveredLink}
+                        handleClick={handleClick}
+                        index={i}
+                        showDivider={i < links.length - 1}
+                        dividerType={theme.link_divider}
+                      />
+                    ))}
+                  </div>
+                )
+              }
+
+              return (
+                <div key={category} className="space-y-2">
+                  <motion.button
+                    onClick={() => toggleCategory(category)}
+                    className="flex items-center gap-2 w-full text-left py-2 transition-all"
+                    style={{ color: theme.text_color }}
+                    whileHover={{ opacity: 0.8 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex-1 h-px" style={{ background: `linear-gradient(90deg, ${theme.text_color}25, transparent)` }} />
+                    <div className="flex items-center gap-1.5 px-3 text-xs font-semibold" style={{ opacity: 0.45 }}>
+                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
+                      {category}
+                    </div>
+                    <div className="flex-1 h-px" style={{ background: `linear-gradient(270deg, ${theme.text_color}25, transparent)` }} />
+                  </motion.button>
+
+                  <AnimatePresence initial={false}>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: 'easeInOut' }}
+                        className="overflow-hidden space-y-2"
+                      >
+                        {links.map((link, i) => (
+                          <LinkListItem
+                            key={link.id}
+                            link={link}
+                            theme={theme}
+                            isPremium={isPremium}
+                            isGlass={isGlass}
+                            glassBlur={glassBlur}
+                            btnRadius={btnRadius}
+                            variant="category"
+                            hoveredLink={hoveredLink}
+                            setHoveredLink={setHoveredLink}
+                            handleClick={handleClick}
+                            index={i}
+                            showDivider={i < links.length - 1}
+                            dividerType={theme.link_divider}
+                          />
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )
+            })}
+          </motion.div>
+        )
+
+      case 'gallery': {
+        const images = (data as any).image_urls as string[] | undefined
+        const imageArray: string[] = Array.isArray(images) ? images : []
+        if (imageArray.length > 0) {
+          return (
+            <div className="grid grid-cols-2 gap-2 w-full">
+              {imageArray.map((url, i) => (
+                <div key={i} className="aspect-square rounded-xl overflow-hidden" style={{ border: `1px solid ${theme.text_color}10` }}>
+                  <img src={url} alt="" className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+          )
+        }
+        return (
+          <div className="w-full p-8 rounded-2xl text-center" style={{ background: `${theme.text_color}06`, border: `1px solid ${theme.text_color}10` }}>
+            <p className="text-sm" style={{ opacity: 0.5 }}>Galería de imágenes</p>
+          </div>
+        )
+      }
+
+      case 'embed': {
+        const url = (data as any).url as string | undefined
+        if (url) {
+          return (
+            <div className="w-full space-y-2">
+              <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${theme.text_color}10` }}>
+                <iframe
+                  src={url}
+                  className="w-full aspect-video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="Contenido incrustado"
+                />
+              </div>
+              <p className="text-xs text-center" style={{ opacity: 0.4 }}>
+                Algunos sitios bloquean la vista previa incrustada
+              </p>
+            </div>
+          )
+        }
+        return null
+      }
+
+      case 'text': {
+        const content = (data as any).content as string | undefined
+        if (content) {
+          return (
+            <div
+              className="w-full text-sm leading-relaxed"
+              style={{ fontFamily: theme.font, opacity: 0.75 }}
+              dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
+            />
+          )
+        }
+        return null
+      }
+
+      case 'cta': {
+        const buttonText = (data as any).button_text as string | undefined
+        const buttonUrl = (data as any).button_url as string | undefined
+        if (buttonText && buttonUrl) {
+          return (
+            <motion.a
+              href={buttonUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full block text-center py-4 px-6 rounded-2xl font-bold text-lg tracking-tight"
+              style={{
+                background: theme.accent_color,
+                color: '#fff',
+                boxShadow: `0 4px 20px ${theme.accent_color}40`,
+                borderRadius: btnRadius,
+                fontFamily: theme.font,
+              }}
+            >
+              {buttonText}
+            </motion.a>
+          )
+        }
+        return null
+      }
+
+      case 'divider':
+        return (
+          <div className="w-full flex items-center justify-center py-2">
+            <div className="w-full h-px" style={{ background: `linear-gradient(90deg, transparent, ${theme.text_color}20, transparent)` }} />
+          </div>
+        )
+
+      default:
+        return null
+    }
+  }, [theme, isPremium, isGlass, glassBlur, btnRadius, profile, username, avatarLoaded, groupedLinks, expandedCategories, toggleCategory, hoveredLink, setHoveredLink, handleClick, t])
 
   return (
     <div
@@ -446,6 +1113,16 @@ export function PublicProfilePage() {
         </div>
       )}
 
+      {/* Presentation Mode */}
+      {presentationActive && (
+        <PresentationMode
+          blocks={activeBlocks}
+          theme={theme}
+          onExit={() => setPresentationActive(false)}
+          renderBlock={renderBlockContent}
+        />
+      )}
+
       {/* Main Content */}
       <motion.div
         initial={{ opacity: theme.entrance_animation === 'none' ? 1 : theme.entrance_animation === 'slide-up' ? 0 : theme.entrance_animation === 'zoom' ? 0 : 0,
@@ -476,602 +1153,721 @@ export function PublicProfilePage() {
             </form>
           </div>
         )}
-        {theme.show_avatar && (
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'spring', damping: 15, stiffness: 200, delay: 0.1 }}
-            className="relative group"
-          >
-            {/* Glow ring */}
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              animate={{
-                boxShadow: [
-                  `0 0 25px ${theme.accent_color}30, 0 0 50px ${theme.accent_color}10`,
-                  `0 0 35px ${theme.accent_color}50, 0 0 70px ${theme.accent_color}20`,
-                  `0 0 25px ${theme.accent_color}30, 0 0 50px ${theme.accent_color}10`,
-                ],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            {/* Avatar container */}
-            <div
-              className={`rounded-full overflow-hidden relative ${theme.avatar_size === 'lg' ? 'w-28 h-28' : theme.avatar_size === 'sm' ? 'w-16 h-16' : 'w-24 h-24'}`}
-              style={{
-                boxShadow: `0 0 40px ${theme.accent_color}30, 0 0 80px ${theme.accent_color}10`,
-                border: `3px solid ${theme.accent_color}50`,
-              }}
-            >
-              {profile.avatar_url ? (
-                <>
-                  <motion.img
-                    src={profile.avatar_url}
-                    alt={profile.display_name || username}
-                    className="w-full h-full object-cover"
-                    style={{ opacity: avatarLoaded ? 1 : 0 }}
-                    onLoad={() => setAvatarLoaded(true)}
-                    initial={{ scale: 1.1 }}
-                    animate={avatarLoaded ? { scale: 1 } : {}}
-                    transition={{ duration: 0.5 }}
-                  />
-                  {!avatarLoaded && (
-                    <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${theme.accent_color}, ${theme.accent_color}66)` }}>
-                      <Loader2 className="w-6 h-6 text-white/50 animate-spin" />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div
-                  className="w-full h-full flex items-center justify-center text-4xl font-black select-none"
-                  style={{
-                    background: `linear-gradient(135deg, ${theme.accent_color}, ${theme.accent_color}77)`,
-                    textShadow: '0 2px 10px rgba(0,0,0,0.3)',
-                  }}
-                >
-                  {(profile.display_name || username || '?')[0]?.toUpperCase()}
-                </div>
-              )}
-              {/* Premium badge */}
-              {isPremium && (
-                <motion.div
-                  className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
-                  style={{
-                    background: `linear-gradient(135deg, #f59e0b, #d97706)`,
-                    border: '2px solid rgba(0,0,0,0.3)',
-                  }}
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
-                >
-                  <Sparkles className="w-4 h-4 text-white" />
-                </motion.div>
-              )}
-            </div>
-          </motion.div>
-        )}
 
-        {/* Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-center space-y-2"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <h1
-              className={`${
-                theme.title_font_size === 'sm' ? 'text-xl sm:text-2xl' :
-                theme.title_font_size === 'md' ? 'text-2xl sm:text-3xl' :
-                theme.title_font_size === 'lg' ? 'text-3xl sm:text-4xl' :
-                'text-4xl sm:text-5xl'
-              } font-black tracking-tight leading-tight ${
-                theme.title_style === 'gradient' ? 'bg-gradient-to-r from-white via-aburrido-300 to-white bg-clip-text text-transparent' :
-                theme.title_style === 'shadow' ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]' :
-                theme.title_style === 'outline' ? 'text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.8)]' : ''
-              }`}
-              style={{
-                ...(theme.show_gradient_text ? { background: `linear-gradient(135deg, ${theme.accent_color}, #ffffff)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : {}),
-                textShadow: `0 2px 20px rgba(0,0,0,0.3)`,
-                fontFamily: theme.font,
-              }}
-            >
-              {profile.display_name || username}
-            </h1>
-            {profile.is_verified && theme.show_verification_badge && theme.badge_style !== 'none' && (
-              <motion.div
-                initial={{ scale: 0, rotate: -90 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: 0.25, type: 'spring', stiffness: 200 }}
-                className={`${theme.badge_style === 'glow' ? 'w-7 h-7 shadow-lg shadow-aburrido-500/60 animate-pulse' : theme.badge_style === 'minimal' ? 'w-5 h-5 bg-aburrido-500/80' : 'w-6 h-6 shadow-lg shadow-aburrido-500/40'} rounded-full bg-aburrido-500 flex items-center justify-center`}
-                title="Verificado"
-              >
-                <Check className="w-3.5 h-3.5 text-white" />
-              </motion.div>
-            )}
-          </div>
-
-          {theme.show_bio && profile.bio && (
+        {hasBlocks ? (
+          <>
+            {/* Share + QR */}
             <motion.div
-              className="text-sm leading-relaxed max-w-xs mx-auto font-light"
-              style={{ opacity: 0.75, fontFamily: theme.font }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 0.75, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
-              dangerouslySetInnerHTML={{ __html: renderMarkdown(profile.bio) }}
-            />
-          )}
-
-          {isPremium && (
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.4, type: 'spring' }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-              style={{
-                background: `linear-gradient(135deg, ${theme.accent_color}25, ${theme.accent_color}08)`,
-                border: `1px solid ${theme.accent_color}35`,
-                color: theme.accent_color,
-                backdropFilter: 'blur(10px)',
-              }}
+              className="flex items-center gap-2"
             >
-              <Sparkles className="w-3 h-3" />
-              {t('profile.premium.badge')}
-            </motion.div>
-          )}
-        </motion.div>
-
-        {/* Share + QR */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="flex items-center gap-2"
-        >
-          <motion.button
-            onClick={copyProfileLink}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm"
-            style={{
-              background: copied ? '#22c55e18' : `${theme.text_color}06`,
-              border: `1px solid ${copied ? '#22c55e30' : theme.text_color + '12'}`,
-              color: copied ? '#22c55e' : theme.text_color,
-            }}
-          >
-            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            {copied ? t('profile.copied') : t('profile.copyLink')}
-          </motion.button>
-          <motion.button
-            onClick={() => setShowQR(!showQR)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm"
-            style={{
-              background: `${theme.text_color}06`,
-              border: `1px solid ${theme.text_color}12`,
-              color: theme.text_color,
-              opacity: 0.7,
-            }}
-          >
-            <Share2 className="w-3.5 h-3.5" />
-            {t('profile.qr')}
-          </motion.button>
-          <motion.button
-            onClick={() => {
-              const vcard = `BEGIN:VCARD
+              <motion.button
+                onClick={copyProfileLink}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm"
+                style={{
+                  background: copied ? '#22c55e18' : `${theme.text_color}06`,
+                  border: `1px solid ${copied ? '#22c55e30' : theme.text_color + '12'}`,
+                  color: copied ? '#22c55e' : theme.text_color,
+                }}
+              >
+                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? t('profile.copied') : t('profile.copyLink')}
+              </motion.button>
+              <motion.button
+                onClick={() => setShowQR(!showQR)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm"
+                style={{
+                  background: `${theme.text_color}06`,
+                  border: `1px solid ${theme.text_color}12`,
+                  color: theme.text_color,
+                  opacity: 0.7,
+                }}
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                {t('profile.qr')}
+              </motion.button>
+              <motion.button
+                onClick={() => {
+                  const vcard = `BEGIN:VCARD
 VERSION:3.0
 FN:${profile.display_name || username}
 NICKNAME:${username}
 URL:${profileUrl}
 ${profile.bio ? `NOTE:${profile.bio.replace(/\n/g, '\\n')}` : ''}
 END:VCARD`
-              const blob = new Blob([vcard], { type: 'text/vcard' })
-              const url = URL.createObjectURL(blob)
-              const a = document.createElement('a')
-              a.href = url; a.download = `${username}.vcf`; a.click()
-              URL.revokeObjectURL(url)
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm"
-            style={{
-              background: `${theme.text_color}06`,
-              border: `1px solid ${theme.text_color}12`,
-              color: theme.text_color,
-              opacity: 0.7,
-            }}
-          >
-            <Download className="w-3.5 h-3.5" />
-            vCard
-          </motion.button>
-        </motion.div>
-
-        {/* QR Panel */}
-        <AnimatePresence>
-          {showQR && (
-            <motion.div
-              initial={{ opacity: 0, height: 0, scale: 0.95 }}
-              animate={{ opacity: 1, height: 'auto', scale: 1 }}
-              exit={{ opacity: 0, height: 0, scale: 0.95 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden w-full"
-            >
-              <motion.div
-                className="p-5 rounded-2xl backdrop-blur-2xl"
+                  const blob = new Blob([vcard], { type: 'text/vcard' })
+                  const url = URL.createObjectURL(blob)
+                  const a = document.createElement('a')
+                  a.href = url; a.download = `${username}.vcf`; a.click()
+                  URL.revokeObjectURL(url)
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm"
                 style={{
-                  background: 'rgba(0,0,0,0.3)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  boxShadow: '0 16px 48px rgba(0,0,0,0.3)',
+                  background: `${theme.text_color}06`,
+                  border: `1px solid ${theme.text_color}12`,
+                  color: theme.text_color,
+                  opacity: 0.7,
                 }}
               >
-                <QRCode url={profileUrl} title={profile.display_name || username} />
-              </motion.div>
+                <Download className="w-3.5 h-3.5" />
+                vCard
+              </motion.button>
             </motion.div>
-          )}
-        </AnimatePresence>
 
-        {/* Badges */}
-        {profile.badges && profile.badges.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="flex items-center gap-2 flex-wrap justify-center"
-          >
-            {profile.badges.map((badge) => (
-              <motion.div
-                key={badge.id}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm"
-                style={{
-                  background: badge.background,
-                  border: `1px solid ${badge.color}30`,
-                  color: badge.color,
-                }}
-                whileHover={{ scale: 1.08, y: -1 }}
-                title={badge.name}
-              >
-                <span>{badge.icon}</span>
-                <span>{badge.name}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* Links */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-          className="w-full space-y-3 mt-1"
-        >
-          {Object.entries(groupedLinks).map(([category, links]) => {
-            const isDefault = category === '__default__'
-            const isExpanded = expandedCategories.has(category)
-
-            if (isDefault) {
-              return (
-                <div key="__default" className="space-y-2.5">
-                  {links.map((link, i) => (
-                    <div key={link.id}>
-                      <motion.a
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => handleClick(link.id)}
-                        initial={{ opacity: 0, y: 16 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 + i * 0.06, type: 'spring', damping: 20 }}
-                        whileHover={{ scale: link.featured ? 1.03 : 1.02, y: link.featured ? -2 : -1 }}
-                        whileTap={{ scale: 0.98 }}
-                        onHoverStart={() => setHoveredLink(link.id)}
-                        onHoverEnd={() => setHoveredLink(null)}
-                        className="relative flex items-center gap-3.5 w-full px-5 py-4 overflow-hidden group transition-shadow"
-                        style={{
-                          background: isGlass ? 'rgba(255,255,255,0.06)' : theme.button_color,
-                          color: theme.button_text_color,
-                          borderRadius: btnRadius,
-                          backdropFilter: isGlass ? `blur(${glassBlur})` : 'none',
-                          border: isGlass ? '1px solid rgba(255,255,255,0.08)' : `1px solid ${theme.text_color}08`,
-                          boxShadow: hoveredLink === link.id ? `0 4px 20px ${theme.shadow_color || theme.accent_color}30` : (theme.link_shadow && theme.link_shadow !== 'none' ? `0 4px 12px ${theme.shadow_color || '#000'}${theme.link_shadow === 'soft' ? '15' : theme.link_shadow === 'medium' ? '25' : '40'}` : `0 1px 4px rgba(0,0,0,0.1)${theme.glow_intensity === 'strong' ? ', 0 0 20px ' + theme.accent_color + '15' : ''}`),
-                          fontFamily: theme.font,
-                        }}
-                      >
-                        {/* Hover glow effect */}
-                        <motion.div
-                          className="absolute inset-0 rounded-2xl transition-all duration-300"
-                          style={{
-                            background: isPremium
-                              ? `linear-gradient(135deg, ${theme.accent_color}12, transparent 60%)`
-                              : `${theme.text_color}03`,
-                            opacity: hoveredLink === link.id ? 1 : 0,
-                          }}
-                        />
-
-                        {/* Premium animated border */}
-                        {isPremium && (
-                          <motion.div
-                            className="absolute inset-0 rounded-2xl pointer-events-none"
-                            animate={{
-                              background: [
-                                `linear-gradient(135deg, ${theme.accent_color}00, ${theme.accent_color}18, ${theme.accent_color}00)`,
-                                `linear-gradient(135deg, ${theme.accent_color}18, ${theme.accent_color}00, ${theme.accent_color}18)`,
-                                `linear-gradient(135deg, ${theme.accent_color}00, ${theme.accent_color}18, ${theme.accent_color}00)`,
-                              ],
-                            }}
-                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                            style={{ padding: '1px' }}
-                          >
-                            <div className="w-full h-full rounded-2xl" style={{ background: 'inherit' }} />
-                          </motion.div>
-                        )}
-
-                        {/* Thumbnail */}
-                            {link.thumbnail_url ? (
-                              <img src={link.thumbnail_url} alt="" className="w-6 h-6 rounded object-cover" />
-                            ) : (
-                              <span className="text-base">{iconMap[link.icon as keyof typeof iconMap] || '🌐'}</span>
-                            )}
-
-                        {/* Featured badge */}
-                        {link.featured && (
-                          <div className="absolute -top-1 left-0 right-0 flex justify-center z-20">
-                            <span className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ background: theme.accent_color, color: '#fff' }}>
-                              Destacado
-                            </span>
-                          </div>
-                        )}
-
-                        {/* Title */}
-                        <div className="relative flex-1 z-10 min-w-0">
-                          <span className="block font-semibold tracking-tight truncate" style={{ fontSize: theme.link_font_size === 'xs' ? '0.75rem' : theme.link_font_size === 'base' ? '1rem' : '0.875rem' }}>
-                            {link.title}
-                          </span>
-                          {theme.show_link_url_preview && hoveredLink === link.id && (
-                            <span className="block text-[10px] truncate mt-0.5 font-mono" style={{ opacity: 0.4 }}>
-                              {link.url}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Clicks counter */}
-                        <motion.span
-                          className="relative text-[10px] font-mono z-10"
-                          style={{ opacity: 0.25 }}
-                          animate={{ opacity: hoveredLink === link.id ? 0.6 : 0.25 }}
-                        >
-                          {link.clicks}
-                        </motion.span>
-
-                        {/* External icon */}
-                        <motion.div
-                          className="relative z-10"
-                          animate={{ x: hoveredLink === link.id ? 3 : 0, opacity: hoveredLink === link.id ? 0.6 : 0.2 }}
-                          transition={{ type: 'spring', stiffness: 300 }}
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </motion.div>
-                      </motion.a>
-                      {i < links.length - 1 && theme.link_divider !== 'none' && (
-                        <div className="flex justify-center py-1">
-                          {theme.link_divider === 'line' && <div className="w-8 h-px" style={{ background: theme.text_color + '15' }} />}
-                          {theme.link_divider === 'dots' && <div className="flex gap-1"><div className="w-1 h-1 rounded-full" style={{ background: theme.text_color + '30' }} /><div className="w-1 h-1 rounded-full" style={{ background: theme.text_color + '15' }} /></div>}
-                          {theme.link_divider === 'glow' && <div className="w-16 h-px" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent_color}30, transparent)` }} />}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )
-            }
-
-            return (
-              <div key={category} className="space-y-2">
-                <motion.button
-                  onClick={() => toggleCategory(category)}
-                  className="flex items-center gap-2 w-full text-left py-2 transition-all"
-                  style={{ color: theme.text_color }}
-                  whileHover={{ opacity: 0.8 }}
-                  whileTap={{ scale: 0.98 }}
+            {/* QR Panel */}
+            <AnimatePresence>
+              {showQR && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                  exit={{ opacity: 0, height: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden w-full"
                 >
-                  <div className="flex-1 h-px" style={{ background: `linear-gradient(90deg, ${theme.text_color}25, transparent)` }} />
-                  <div className="flex items-center gap-1.5 px-3 text-xs font-semibold" style={{ opacity: 0.45 }}>
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
-                    {category}
-                  </div>
-                  <div className="flex-1 h-px" style={{ background: `linear-gradient(270deg, ${theme.text_color}25, transparent)` }} />
-                </motion.button>
+                  <motion.div
+                    className="p-5 rounded-2xl backdrop-blur-2xl"
+                    style={{
+                      background: 'rgba(0,0,0,0.3)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      boxShadow: '0 16px 48px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    <QRCode url={profileUrl} title={profile.display_name || username} />
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-                <AnimatePresence initial={false}>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: 'easeInOut' }}
-                      className="overflow-hidden space-y-2"
-                    >
-                      {links.map((link, i) => (
-                        <div key={link.id}>
-                          <motion.a
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => handleClick(link.id)}
-                            initial={{ opacity: 0, x: -12 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.05 }}
-                            whileHover={{ scale: 1.015, x: 3 }}
-                            whileTap={{ scale: 0.98 }}
-                            onHoverStart={() => setHoveredLink(link.id)}
-                            onHoverEnd={() => setHoveredLink(null)}
-                            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all duration-200 group"
-                            style={{
-                              background: isGlass ? 'rgba(255,255,255,0.04)' : theme.button_color,
-                              color: theme.button_text_color,
-                              borderRadius: theme.button_style === 'pill' ? '9999px' : theme.button_style === 'sharp' ? '8px' : '14px',
-                              backdropFilter: isGlass ? `blur(${glassBlur})` : undefined,
-                              border: isGlass ? '1px solid rgba(255,255,255,0.05)' : `1px solid ${theme.text_color}06`,
-                              fontFamily: theme.font,
-                            }}
-                          >
-                            {link.thumbnail_url ? (
-                              <img src={link.thumbnail_url} alt="" className="w-6 h-6 rounded object-cover" />
-        ) : (
-                              <span className="text-base">{iconMap[link.icon as keyof typeof iconMap] || '🌐'}</span>
-                            )}
-                            <div className="flex-1 min-w-0">
-                              <span className="block text-sm font-medium truncate">{link.title}</span>
-                              {theme.show_link_url_preview && hoveredLink === link.id && (
-                                <span className="block text-[10px] truncate mt-0.5 font-mono" style={{ opacity: 0.4 }}>
-                                  {link.url}
-                                </span>
-                              )}
-                            </div>
-                            <motion.span
-                              className="text-[10px] font-mono"
-                              style={{ opacity: 0.2 }}
-                              animate={{ opacity: hoveredLink === link.id ? 0.5 : 0.2 }}
-                            >
-                              {link.clicks}
-                            </motion.span>
-                            <ExternalLink className="w-3 h-3 shrink-0" style={{ opacity: 0.25 }} />
-                          </motion.a>
-                          {i < links.length - 1 && theme.link_divider !== 'none' && (
-                            <div className="flex justify-center py-1">
-                              {theme.link_divider === 'line' && <div className="w-8 h-px" style={{ background: theme.text_color + '15' }} />}
-                              {theme.link_divider === 'dots' && <div className="flex gap-1"><div className="w-1 h-1 rounded-full" style={{ background: theme.text_color + '30' }} /><div className="w-1 h-1 rounded-full" style={{ background: theme.text_color + '15' }} /></div>}
-                              {theme.link_divider === 'glow' && <div className="w-16 h-px" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent_color}30, transparent)` }} />}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            )
-          })}
-        </motion.div>
-
-        {/* Lead Form */}
-        {theme.lead_form_enabled && (
-          <motion.form
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            onSubmit={(e) => { e.preventDefault(); const input = (e.target as HTMLFormElement).querySelector('input'); if (input) { input.value = ''; } }}
-            className="w-full p-4 rounded-2xl space-y-3"
-            style={{
-              background: isGlass ? 'rgba(255,255,255,0.04)' : `${theme.text_color}06`,
-              border: `1px solid ${theme.text_color}10`,
-              borderRadius: btnRadius,
-              backdropFilter: isGlass ? `blur(${glassBlur})` : undefined,
-            }}
-          >
-            <p className="text-sm font-semibold" style={{ color: theme.text_color }}>
-              {theme.lead_form_title || 'Suscribite'}
-            </p>
-            <div className="flex gap-2">
-              <input
-                type="email" placeholder="tu@email.com" required
-                className="flex-1 px-3 py-2 rounded-xl text-sm bg-black/20 border"
-                style={{ borderColor: theme.text_color + '15', color: theme.text_color }}
-              />
-              <button type="submit"
-                className="px-4 py-2 rounded-xl text-sm font-semibold"
-                style={{ background: theme.accent_color, color: '#fff' }}
+            {/* Badges */}
+            {profile.badges && profile.badges.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex items-center gap-2 flex-wrap justify-center"
               >
-                {theme.lead_form_button_text || 'Enviar'}
-              </button>
-            </div>
-          </motion.form>
-        )}
+                {profile.badges.map((badge) => (
+                  <motion.div
+                    key={badge.id}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm"
+                    style={{
+                      background: badge.background,
+                      border: `1px solid ${badge.color}30`,
+                      color: badge.color,
+                    }}
+                    whileHover={{ scale: 1.08, y: -1 }}
+                    title={badge.name}
+                  >
+                    <span>{badge.icon}</span>
+                    <span>{badge.name}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
 
-        {/* Stats Bar */}
-        {theme.show_stats && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex items-center gap-5 sm:gap-6 px-5 py-2.5 rounded-full text-xs backdrop-blur-sm"
-            style={{
-              background: `${theme.text_color}06`,
-              border: `1px solid ${theme.text_color}10`,
-            }}
-          >
-            <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
-              <Eye className="w-3.5 h-3.5" />
-              <span className="font-medium">{totalViews.toLocaleString()}</span>
-              <span className="hidden sm:inline">{t('profile.visits')}</span>
-            </div>
-            <div className="w-px h-3.5" style={{ background: theme.text_color + '18' }} />
-            <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
-              <MousePointerClick className="w-3.5 h-3.5" />
-              <span className="font-medium">{totalClicks.toLocaleString()}</span>
-              <span className="hidden sm:inline">{t('profile.clicks')}</span>
-            </div>
-            <div className="w-px h-3.5" style={{ background: theme.text_color + '18' }} />
-            <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
-              <Globe className="w-3.5 h-3.5" />
-              <span className="font-medium">{profile.links.length}</span>
-              <span className="hidden sm:inline">{t('profile.links')}</span>
-            </div>
-            {theme.show_online_count && (
-              <>
+            {/* Blocks */}
+            {activeBlocks.map((block) => (
+              <div key={block.id} className="w-full">
+                {renderBlockContent(block)}
+              </div>
+            ))}
+
+            {/* Lead Form */}
+            {theme.lead_form_enabled && (
+              <motion.form
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                onSubmit={(e) => { e.preventDefault(); const input = (e.target as HTMLFormElement).querySelector('input'); if (input) { input.value = ''; } }}
+                className="w-full p-4 rounded-2xl space-y-3"
+                style={{
+                  background: isGlass ? 'rgba(255,255,255,0.04)' : `${theme.text_color}06`,
+                  border: `1px solid ${theme.text_color}10`,
+                  borderRadius: btnRadius,
+                  backdropFilter: isGlass ? `blur(${glassBlur})` : undefined,
+                }}
+              >
+                <p className="text-sm font-semibold" style={{ color: theme.text_color }}>
+                  {theme.lead_form_title || 'Suscribite'}
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="email" placeholder="tu@email.com" required
+                    className="flex-1 px-3 py-2 rounded-xl text-sm bg-black/20 border"
+                    style={{ borderColor: theme.text_color + '15', color: theme.text_color }}
+                  />
+                  <button type="submit"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold"
+                    style={{ background: theme.accent_color, color: '#fff' }}
+                  >
+                    {theme.lead_form_button_text || 'Enviar'}
+                  </button>
+                </div>
+              </motion.form>
+            )}
+
+            {/* Stats Bar */}
+            {theme.show_stats && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex items-center gap-5 sm:gap-6 px-5 py-2.5 rounded-full text-xs backdrop-blur-sm"
+                style={{
+                  background: `${theme.text_color}06`,
+                  border: `1px solid ${theme.text_color}10`,
+                }}
+              >
+                <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
+                  <Eye className="w-3.5 h-3.5" />
+                  <span className="font-medium">{totalViews.toLocaleString()}</span>
+                  <span className="hidden sm:inline">{t('profile.visits')}</span>
+                </div>
                 <div className="w-px h-3.5" style={{ background: theme.text_color + '18' }} />
                 <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
-                  <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                  <span className="font-medium">En vivo</span>
+                  <MousePointerClick className="w-3.5 h-3.5" />
+                  <span className="font-medium">{totalClicks.toLocaleString()}</span>
+                  <span className="hidden sm:inline">{t('profile.clicks')}</span>
                 </div>
-              </>
+                <div className="w-px h-3.5" style={{ background: theme.text_color + '18' }} />
+                <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
+                  <Globe className="w-3.5 h-3.5" />
+                  <span className="font-medium">{profile.links.length}</span>
+                  <span className="hidden sm:inline">{t('profile.links')}</span>
+                </div>
+                {theme.show_online_count && (
+                  <>
+                    <div className="w-px h-3.5" style={{ background: theme.text_color + '18' }} />
+                    <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
+                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                      <span className="font-medium">En vivo</span>
+                    </div>
+                  </>
+                )}
+              </motion.div>
             )}
-          </motion.div>
-        )}
 
-        {/* Brand Footer */}
-        {theme.show_brand_footer && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="flex flex-col items-center gap-3 pt-4"
-          >
-            <motion.a
-              href={isPremium ? '/premium' : '/'}
-              className="flex items-center gap-2 text-xs font-medium tracking-wider uppercase backdrop-blur-sm px-4 py-2 rounded-full"
-              style={{
-                opacity: 0.25,
-                border: `1px solid ${theme.text_color}08`,
-              }}
-              whileHover={{ opacity: 0.5, scale: 1.02 }}
-            >
-              {isPremium ? (
-                <><Zap className="w-3 h-3" /> {t('profile.footer.powered')}</>
-              ) : (
-                <><Heart className="w-3 h-3" /> {t('profile.footer.created')}</>
-              )}
-            </motion.a>
-            {!isPremium && (
-              <motion.a
-                href="/premium"
-                className="text-[10px] px-3 py-1.5 rounded-full transition-all backdrop-blur-sm"
-                style={{
-                  background: `${theme.accent_color}12`,
-                  border: `1px solid ${theme.accent_color}20`,
-                  color: theme.accent_color,
-                  opacity: 0.5,
-                }}
-                whileHover={{ opacity: 0.8, scale: 1.05 }}
+            {/* Brand Footer */}
+            {theme.show_brand_footer && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+                className="flex flex-col items-center gap-3 pt-4"
               >
-                {t('profile.premium.cta')}
-              </motion.a>
+                <motion.a
+                  href={isPremium ? '/premium' : '/'}
+                  className="flex items-center gap-2 text-xs font-medium tracking-wider uppercase backdrop-blur-sm px-4 py-2 rounded-full"
+                  style={{
+                    opacity: 0.25,
+                    border: `1px solid ${theme.text_color}08`,
+                  }}
+                  whileHover={{ opacity: 0.5, scale: 1.02 }}
+                >
+                  {isPremium ? (
+                    <><Zap className="w-3 h-3" /> {t('profile.footer.powered')}</>
+                  ) : (
+                    <><Heart className="w-3 h-3" /> {t('profile.footer.created')}</>
+                  )}
+                </motion.a>
+                {!isPremium && (
+                  <motion.a
+                    href="/premium"
+                    className="text-[10px] px-3 py-1.5 rounded-full transition-all backdrop-blur-sm"
+                    style={{
+                      background: `${theme.accent_color}12`,
+                      border: `1px solid ${theme.accent_color}20`,
+                      color: theme.accent_color,
+                      opacity: 0.5,
+                    }}
+                    whileHover={{ opacity: 0.8, scale: 1.05 }}
+                  >
+                    {t('profile.premium.cta')}
+                  </motion.a>
+                )}
+              </motion.div>
             )}
-          </motion.div>
-          )}
-          </div>
-        </motion.div>
-      </div>
+          </>
+        ) : (
+          <>
+            {/* Avatar */}
+            {theme.show_avatar && (
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', damping: 15, stiffness: 200, delay: 0.1 }}
+                className="relative group"
+              >
+                {/* Glow ring */}
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  animate={{
+                    boxShadow: [
+                      `0 0 25px ${theme.accent_color}30, 0 0 50px ${theme.accent_color}10`,
+                      `0 0 35px ${theme.accent_color}50, 0 0 70px ${theme.accent_color}20`,
+                      `0 0 25px ${theme.accent_color}30, 0 0 50px ${theme.accent_color}10`,
+                    ],
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                {/* Avatar container */}
+                <div
+                  className={`rounded-full overflow-hidden relative ${theme.avatar_size === 'lg' ? 'w-28 h-28' : theme.avatar_size === 'sm' ? 'w-16 h-16' : 'w-24 h-24'}`}
+                  style={{
+                    boxShadow: `0 0 40px ${theme.accent_color}30, 0 0 80px ${theme.accent_color}10`,
+                    border: `3px solid ${theme.accent_color}50`,
+                  }}
+                >
+                  {profile.avatar_url ? (
+                    <>
+                      <motion.img
+                        src={profile.avatar_url}
+                        alt={profile.display_name || username}
+                        className="w-full h-full object-cover"
+                        style={{ opacity: avatarLoaded ? 1 : 0 }}
+                        onLoad={() => setAvatarLoaded(true)}
+                        initial={{ scale: 1.1 }}
+                        animate={avatarLoaded ? { scale: 1 } : {}}
+                        transition={{ duration: 0.5 }}
+                      />
+                      {!avatarLoaded && (
+                        <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${theme.accent_color}, ${theme.accent_color}66)` }}>
+                          <Loader2 className="w-6 h-6 text-white/50 animate-spin" />
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div
+                      className="w-full h-full flex items-center justify-center text-4xl font-black select-none"
+                      style={{
+                        background: `linear-gradient(135deg, ${theme.accent_color}, ${theme.accent_color}77)`,
+                        textShadow: '0 2px 10px rgba(0,0,0,0.3)',
+                      }}
+                    >
+                      {(profile.display_name || username || '?')[0]?.toUpperCase()}
+                    </div>
+                  )}
+                  {/* Premium badge */}
+                  {isPremium && (
+                    <motion.div
+                      className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+                      style={{
+                        background: `linear-gradient(135deg, #f59e0b, #d97706)`,
+                        border: '2px solid rgba(0,0,0,0.3)',
+                      }}
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
+                    >
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Info */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-center space-y-2"
+            >
+              <div className="flex items-center justify-center gap-2">
+                <h1
+                  className={`${
+                    theme.title_font_size === 'sm' ? 'text-xl sm:text-2xl' :
+                    theme.title_font_size === 'md' ? 'text-2xl sm:text-3xl' :
+                    theme.title_font_size === 'lg' ? 'text-3xl sm:text-4xl' :
+                    'text-4xl sm:text-5xl'
+                  } font-black tracking-tight leading-tight ${
+                    theme.title_style === 'gradient' ? 'bg-gradient-to-r from-white via-aburrido-300 to-white bg-clip-text text-transparent' :
+                    theme.title_style === 'shadow' ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]' :
+                    theme.title_style === 'outline' ? 'text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.8)]' : ''
+                  }`}
+                  style={{
+                    ...(theme.show_gradient_text ? { background: `linear-gradient(135deg, ${theme.accent_color}, #ffffff)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : {}),
+                    textShadow: `0 2px 20px rgba(0,0,0,0.3)`,
+                    fontFamily: theme.font,
+                  }}
+                >
+                  {profile.display_name || username}
+                </h1>
+                {profile.is_verified && theme.show_verification_badge && theme.badge_style !== 'none' && (
+                  <motion.div
+                    initial={{ scale: 0, rotate: -90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 0.25, type: 'spring', stiffness: 200 }}
+                    className={`${theme.badge_style === 'glow' ? 'w-7 h-7 shadow-lg shadow-aburrido-500/60 animate-pulse' : theme.badge_style === 'minimal' ? 'w-5 h-5 bg-aburrido-500/80' : 'w-6 h-6 shadow-lg shadow-aburrido-500/40'} rounded-full bg-aburrido-500 flex items-center justify-center`}
+                    title="Verificado"
+                  >
+                    <Check className="w-3.5 h-3.5 text-white" />
+                  </motion.div>
+                )}
+              </div>
+
+              {theme.show_bio && profile.bio && (
+                <motion.div
+                  className="text-sm leading-relaxed max-w-xs mx-auto font-light"
+                  style={{ opacity: 0.75, fontFamily: theme.font }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 0.75, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(profile.bio) }}
+                />
+              )}
+
+              {isPremium && (
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.4, type: 'spring' }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.accent_color}25, ${theme.accent_color}08)`,
+                    border: `1px solid ${theme.accent_color}35`,
+                    color: theme.accent_color,
+                    backdropFilter: 'blur(10px)',
+                  }}
+                >
+                  <Sparkles className="w-3 h-3" />
+                  {t('profile.premium.badge')}
+                </motion.div>
+              )}
+            </motion.div>
+
+            {/* Share + QR */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 }}
+              className="flex items-center gap-2"
+            >
+              <motion.button
+                onClick={copyProfileLink}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm"
+                style={{
+                  background: copied ? '#22c55e18' : `${theme.text_color}06`,
+                  border: `1px solid ${copied ? '#22c55e30' : theme.text_color + '12'}`,
+                  color: copied ? '#22c55e' : theme.text_color,
+                }}
+              >
+                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? t('profile.copied') : t('profile.copyLink')}
+              </motion.button>
+              <motion.button
+                onClick={() => setShowQR(!showQR)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm"
+                style={{
+                  background: `${theme.text_color}06`,
+                  border: `1px solid ${theme.text_color}12`,
+                  color: theme.text_color,
+                  opacity: 0.7,
+                }}
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                {t('profile.qr')}
+              </motion.button>
+              <motion.button
+                onClick={() => {
+                  const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:${profile.display_name || username}
+NICKNAME:${username}
+URL:${profileUrl}
+${profile.bio ? `NOTE:${profile.bio.replace(/\n/g, '\\n')}` : ''}
+END:VCARD`
+                  const blob = new Blob([vcard], { type: 'text/vcard' })
+                  const url = URL.createObjectURL(blob)
+                  const a = document.createElement('a')
+                  a.href = url; a.download = `${username}.vcf`; a.click()
+                  URL.revokeObjectURL(url)
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm"
+                style={{
+                  background: `${theme.text_color}06`,
+                  border: `1px solid ${theme.text_color}12`,
+                  color: theme.text_color,
+                  opacity: 0.7,
+                }}
+              >
+                <Download className="w-3.5 h-3.5" />
+                vCard
+              </motion.button>
+            </motion.div>
+
+            {/* QR Panel */}
+            <AnimatePresence>
+              {showQR && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                  exit={{ opacity: 0, height: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden w-full"
+                >
+                  <motion.div
+                    className="p-5 rounded-2xl backdrop-blur-2xl"
+                    style={{
+                      background: 'rgba(0,0,0,0.3)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      boxShadow: '0 16px 48px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    <QRCode url={profileUrl} title={profile.display_name || username} />
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Badges */}
+            {profile.badges && profile.badges.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex items-center gap-2 flex-wrap justify-center"
+              >
+                {profile.badges.map((badge) => (
+                  <motion.div
+                    key={badge.id}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm"
+                    style={{
+                      background: badge.background,
+                      border: `1px solid ${badge.color}30`,
+                      color: badge.color,
+                    }}
+                    whileHover={{ scale: 1.08, y: -1 }}
+                    title={badge.name}
+                  >
+                    <span>{badge.icon}</span>
+                    <span>{badge.name}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+
+            {/* Links */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45 }}
+              className="w-full space-y-3 mt-1"
+            >
+              {Object.entries(groupedLinks).map(([category, links]) => {
+                const isDefault = category === '__default__'
+                const isExpanded = expandedCategories.has(category)
+
+                if (isDefault) {
+                  return (
+                    <div key="__default" className="space-y-2.5">
+                      {links.map((link, i) => (
+                        <LinkListItem
+                          key={link.id}
+                          link={link}
+                          theme={theme}
+                          isPremium={isPremium}
+                          isGlass={isGlass}
+                          glassBlur={glassBlur}
+                          btnRadius={btnRadius}
+                          variant="default"
+                          hoveredLink={hoveredLink}
+                          setHoveredLink={setHoveredLink}
+                          handleClick={handleClick}
+                          index={i}
+                          showDivider={i < links.length - 1}
+                          dividerType={theme.link_divider}
+                        />
+                      ))}
+                    </div>
+                  )
+                }
+
+                return (
+                  <div key={category} className="space-y-2">
+                    <motion.button
+                      onClick={() => toggleCategory(category)}
+                      className="flex items-center gap-2 w-full text-left py-2 transition-all"
+                      style={{ color: theme.text_color }}
+                      whileHover={{ opacity: 0.8 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="flex-1 h-px" style={{ background: `linear-gradient(90deg, ${theme.text_color}25, transparent)` }} />
+                      <div className="flex items-center gap-1.5 px-3 text-xs font-semibold" style={{ opacity: 0.45 }}>
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
+                        {category}
+                      </div>
+                      <div className="flex-1 h-px" style={{ background: `linear-gradient(270deg, ${theme.text_color}25, transparent)` }} />
+                    </motion.button>
+
+                    <AnimatePresence initial={false}>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+                          className="overflow-hidden space-y-2"
+                        >
+                          {links.map((link, i) => (
+                            <LinkListItem
+                              key={link.id}
+                              link={link}
+                              theme={theme}
+                              isPremium={isPremium}
+                              isGlass={isGlass}
+                              glassBlur={glassBlur}
+                              btnRadius={btnRadius}
+                              variant="category"
+                              hoveredLink={hoveredLink}
+                              setHoveredLink={setHoveredLink}
+                              handleClick={handleClick}
+                              index={i}
+                              showDivider={i < links.length - 1}
+                              dividerType={theme.link_divider}
+                            />
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                )
+              })}
+            </motion.div>
+
+            {/* Lead Form */}
+            {theme.lead_form_enabled && (
+              <motion.form
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                onSubmit={(e) => { e.preventDefault(); const input = (e.target as HTMLFormElement).querySelector('input'); if (input) { input.value = ''; } }}
+                className="w-full p-4 rounded-2xl space-y-3"
+                style={{
+                  background: isGlass ? 'rgba(255,255,255,0.04)' : `${theme.text_color}06`,
+                  border: `1px solid ${theme.text_color}10`,
+                  borderRadius: btnRadius,
+                  backdropFilter: isGlass ? `blur(${glassBlur})` : undefined,
+                }}
+              >
+                <p className="text-sm font-semibold" style={{ color: theme.text_color }}>
+                  {theme.lead_form_title || 'Suscribite'}
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="email" placeholder="tu@email.com" required
+                    className="flex-1 px-3 py-2 rounded-xl text-sm bg-black/20 border"
+                    style={{ borderColor: theme.text_color + '15', color: theme.text_color }}
+                  />
+                  <button type="submit"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold"
+                    style={{ background: theme.accent_color, color: '#fff' }}
+                  >
+                    {theme.lead_form_button_text || 'Enviar'}
+                  </button>
+                </div>
+              </motion.form>
+            )}
+
+            {/* Stats Bar */}
+            {theme.show_stats && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex items-center gap-5 sm:gap-6 px-5 py-2.5 rounded-full text-xs backdrop-blur-sm"
+                style={{
+                  background: `${theme.text_color}06`,
+                  border: `1px solid ${theme.text_color}10`,
+                }}
+              >
+                <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
+                  <Eye className="w-3.5 h-3.5" />
+                  <span className="font-medium">{totalViews.toLocaleString()}</span>
+                  <span className="hidden sm:inline">{t('profile.visits')}</span>
+                </div>
+                <div className="w-px h-3.5" style={{ background: theme.text_color + '18' }} />
+                <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
+                  <MousePointerClick className="w-3.5 h-3.5" />
+                  <span className="font-medium">{totalClicks.toLocaleString()}</span>
+                  <span className="hidden sm:inline">{t('profile.clicks')}</span>
+                </div>
+                <div className="w-px h-3.5" style={{ background: theme.text_color + '18' }} />
+                <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
+                  <Globe className="w-3.5 h-3.5" />
+                  <span className="font-medium">{profile.links.length}</span>
+                  <span className="hidden sm:inline">{t('profile.links')}</span>
+                </div>
+                {theme.show_online_count && (
+                  <>
+                    <div className="w-px h-3.5" style={{ background: theme.text_color + '18' }} />
+                    <div className="flex items-center gap-1.5" style={{ opacity: 0.6 }}>
+                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                      <span className="font-medium">En vivo</span>
+                    </div>
+                  </>
+                )}
+              </motion.div>
+            )}
+
+            {/* Brand Footer */}
+            {theme.show_brand_footer && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+                className="flex flex-col items-center gap-3 pt-4"
+              >
+                <motion.a
+                  href={isPremium ? '/premium' : '/'}
+                  className="flex items-center gap-2 text-xs font-medium tracking-wider uppercase backdrop-blur-sm px-4 py-2 rounded-full"
+                  style={{
+                    opacity: 0.25,
+                    border: `1px solid ${theme.text_color}08`,
+                  }}
+                  whileHover={{ opacity: 0.5, scale: 1.02 }}
+                >
+                  {isPremium ? (
+                    <><Zap className="w-3 h-3" /> {t('profile.footer.powered')}</>
+                  ) : (
+                    <><Heart className="w-3 h-3" /> {t('profile.footer.created')}</>
+                  )}
+                </motion.a>
+                {!isPremium && (
+                  <motion.a
+                    href="/premium"
+                    className="text-[10px] px-3 py-1.5 rounded-full transition-all backdrop-blur-sm"
+                    style={{
+                      background: `${theme.accent_color}12`,
+                      border: `1px solid ${theme.accent_color}20`,
+                      color: theme.accent_color,
+                      opacity: 0.5,
+                    }}
+                    whileHover={{ opacity: 0.8, scale: 1.05 }}
+                  >
+                    {t('profile.premium.cta')}
+                  </motion.a>
+                )}
+              </motion.div>
+            )}
+          </>
+        )}
+        </div>
+      </motion.div>
+    </div>
   )
 }
-

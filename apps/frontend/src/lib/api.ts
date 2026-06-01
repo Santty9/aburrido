@@ -3,6 +3,7 @@ import type {
   Profile,
   PublicProfile,
   Link,
+  Block,
   CreateLinkInput,
   UpdateLinkInput,
   ChangelogEntry,
@@ -148,6 +149,7 @@ export const authApi = {
       custom_domain_verified: false,
       verification_status: 'unverified',
       trust_score: 0,
+      blocks: [],
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }
@@ -238,6 +240,7 @@ export const profileApi = {
             { id: fakeId(), profile_id: '', title: 'Twitter / X', url: 'https://x.com', icon: 'twitter', icon_url: null, position: 1, is_active: true, clicks: 28, thumbnail_url: null, scheduled_start: null, scheduled_end: null, preview: null, pixels: null, affiliate: null, created_at: '', updated_at: '' },
             { id: fakeId(), profile_id: '', title: 'Instagram', url: 'https://instagram.com', icon: 'instagram', icon_url: null, position: 2, is_active: true, clicks: 15, thumbnail_url: null, scheduled_start: null, scheduled_end: null, preview: null, pixels: null, affiliate: null, created_at: '', updated_at: '' },
           ],
+          blocks: [],
           is_premium: false,
           is_verified: false,
           badges: [],
@@ -266,6 +269,7 @@ export const profileApi = {
         avatar_url: profile.avatar_url,
         theme: { ...profile.theme, show_stats: profile.theme.show_stats ?? true, show_particles: profile.theme.show_particles ?? true, show_brand_footer: profile.theme.show_brand_footer ?? true },
         links: activeLinks,
+        blocks: (profile as any).blocks || [],
         is_premium: profile.is_premium,
         is_verified: profile.verification_status === 'verified',
         badges: assignedBadges,
@@ -372,6 +376,17 @@ export const linkApi = {
     const link = links.find((l) => l.id === id)
     if (link) { link.clicks++; saveData(profile, links) }
     return { success: true }
+  },
+}
+
+export const blockApi = {
+  update: async (blocks: Block[]): Promise<ApiResponse<Block[]>> => {
+    await delay(100)
+    const { profile, links } = getData()
+    if (!profile) return { success: false, error: 'No autorizado' }
+    const updated = { ...profile, blocks, updated_at: new Date().toISOString() }
+    saveData(updated, links)
+    return { success: true, data: blocks }
   },
 }
 
