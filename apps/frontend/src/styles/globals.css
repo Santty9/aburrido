@@ -163,11 +163,11 @@
   @apply w-full px-4 py-3 bg-surface-2 border border-border rounded-xl text-white placeholder:text-text-secondary/50 focus:outline-none focus:border-keef-500 focus:ring-1 focus:ring-keef-500/50 transition-all duration-200;
 }
 
-@utility card-hover {
-  @apply transition-all duration-300;
+.card-hover {
+  transition: all 0.3s;
 }
 
-@utility card-hover:hover {
+.card-hover:hover {
   border-color: rgba(139, 92, 246, 0.3);
   box-shadow: 0 4px 24px rgba(139, 92, 246, 0.08);
 }
@@ -176,11 +176,11 @@
   @apply bg-keef-500 text-white shadow-lg shadow-keef-500/20;
 }
 
-@utility gradient-border {
+.gradient-border {
   position: relative;
 }
 
-@utility gradient-border::before {
+.gradient-border::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -222,11 +222,11 @@
   animation: shimmer 3s infinite;
 }
 
-@utility scrollbar-hide {
+.scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-@utility scrollbar-hide::-webkit-scrollbar {
+.scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
