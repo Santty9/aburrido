@@ -1,18 +1,18 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Navbar } from './Navbar'
-import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 
 export function AppLayout() {
   const location = useLocation()
+  const isDashboard = location.pathname === '/dashboard'
 
   return (
     <div className="min-h-screen bg-surface">
-      <Navbar />
-      <div className="flex pt-16">
-        <Sidebar />
-        <main className="flex-1 p-4 sm:p-6 ml-0 md:ml-64 min-h-[calc(100vh-4rem)]">
+      {!isDashboard && <Navbar />}
+      <div className={isDashboard ? '' : 'flex pt-16'}>
+        {!isDashboard && <Sidebar />}
+        <main className={isDashboard ? 'min-h-screen' : 'flex-1 p-4 sm:p-6 ml-0 md:ml-64 min-h-[calc(100vh-4rem)]'}>
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
