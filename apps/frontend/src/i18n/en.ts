@@ -30,6 +30,8 @@ export const en: Translations = {
   'nav.register': 'Create Account',
   'nav.logout': 'Logout',
   'nav.language': 'Language',
+  'nav.tagline': 'your space, your style',
+  'nav.settings': 'Settings',
 
   // Sidebar
   'sidebar.dashboard': 'Dashboard',

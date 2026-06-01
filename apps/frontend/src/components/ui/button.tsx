@@ -8,11 +8,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants = {
-  primary: 'bg-keef-500 hover:bg-keef-600 text-white shadow-lg shadow-keef-500/25',
-  secondary: 'bg-surface-2 hover:bg-surface-3 border border-border text-white',
-  ghost: 'hover:bg-surface-2 text-text-secondary hover:text-white',
-  danger: 'bg-error/10 hover:bg-error/20 text-error border border-error/20',
-  premium: 'bg-gradient-to-r from-keef-500 to-pink-500 hover:from-keef-600 hover:to-pink-600 text-white shadow-lg shadow-keef-500/25',
+  primary: 'bg-keef-500 hover:bg-keef-600 text-white shadow-lg shadow-keef-500/25 hover:shadow-keef-500/40 active:scale-[0.98]',
+  secondary: 'bg-surface-2 hover:bg-surface-3 border border-border hover:border-keef-500/30 text-white active:scale-[0.98]',
+  ghost: 'hover:bg-surface-2 text-text-secondary hover:text-white active:scale-[0.98]',
+  danger: 'bg-error/10 hover:bg-error/20 text-error border border-error/20 hover:border-error/40 active:scale-[0.98]',
+  premium: 'bg-gradient-to-r from-keef-500 to-pink-500 hover:from-keef-600 hover:to-pink-600 text-white shadow-lg shadow-keef-500/25 hover:shadow-keef-500/40 active:scale-[0.98]',
 }
 
 const sizes = {
@@ -27,7 +27,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       disabled={disabled || isLoading}
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]',
+        'inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
         variants[variant],
         sizes[size],
         className

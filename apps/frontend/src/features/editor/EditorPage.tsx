@@ -1,18 +1,23 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, Reorder } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Modal } from '@/components/ui/modal'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/useAuth'
 import { useLanguage } from '@/hooks/useLanguage'
 import { linkApi, backupApi } from '@/lib/api'
 import { iconMap } from '@aburrido/shared'
 import type { Link, CreateLinkInput, LinkPreview, PixelTracking, LinkIcon } from '@aburrido/shared'
-import { Plus, GripVertical, Pencil, Trash2, ExternalLink, Globe, Upload, Download, Tag, X, QrCode, Image, Clock, Target, DollarSign, ChevronDown, ChevronUp, Search, Eye } from 'lucide-react'
+import {
+  Plus, GripVertical, Pencil, Trash2, ExternalLink, Globe, Upload, Download, Tag, X, QrCode,
+  Image, Clock, Target, DollarSign, ChevronDown, ChevronUp, Eye, Link2, Sparkles, Shield,
+  ToggleLeft, ToggleRight, PanelTop, LayoutList, Search, Filter, ArrowUpDown
+} from 'lucide-react'
 
-const linkIcons = ['globe', 'github', 'twitter', 'instagram', 'youtube', 'discord', 'tiktok', 'twitch', 'linkedin', 'spotify']
+const linkIcons = ['globe', 'github', 'twitter', 'instagram', 'youtube', 'discord', 'tiktok', 'twitch', 'linkedin', 'spotify'] as const
 
 async function unfurlUrl(url: string): Promise<LinkPreview | null> {
   try {
@@ -52,10 +57,31 @@ async function unfurlUrl(url: string): Promise<LinkPreview | null> {
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <div className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${checked ? 'bg-keef-500' : 'bg-border'} shrink-0`}
-      onClick={() => onChange(!checked)}>
-      <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${checked ? 'translate-x-5' : ''}`} />
-    </div>
+    <button
+      onClick={() => onChange(!checked)}
+      className={cn(
+        'relative w-11 h-6 rounded-full transition-all duration-300 shrink-0 border',
+        checked ? 'bg-keef-500 border-keef-500/50 shadow-sm shadow-keef-500/20' : 'bg-surface-3 border-border hover:border-keef-500/30'
+      )}
+    >
+      <div className={cn(
+        'absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-all duration-300 shadow-sm',
+        checked ? 'translate-x-5' : ''
+      )} />
+    </button>
+  )
+}
+
+function getDomainFromUrl(url: string): string {
+  try { return new URL(url).hostname.replace('www.', '') } catch { return url }
+}
+
+function StatusDot({ active }: { active: boolean }) {
+  return (
+    <span className={cn(
+      'w-2 h-2 rounded-full shrink-0 transition-colors duration-300',
+      active ? 'bg-success shadow-sm shadow-success/50' : 'bg-text-secondary/40'
+    )} />
   )
 }
 
@@ -66,7 +92,7 @@ export function EditorPage() {
   const [editingLink, setEditingLink] = useState<Link | null>(null)
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
-  const [icon, setIcon] = useState('globe')
+  const [icon, setIcon] = useState<LinkIcon>('globe')
   const [category, setCategory] = useState('')
   const [scheduledStart, setScheduledStart] = useState('')
   const [scheduledEnd, setScheduledEnd] = useState('')
@@ -247,125 +273,198 @@ export function EditorPage() {
     groupedLinks[cat]!.push(link)
   }
 
+  const totalClicks = links.reduce((s, l) => s + l.clicks, 0)
+  const activeCount = links.filter((l) => l.is_active).length
+
   return (
-    <div className="max-w-4xl mx-auto">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold">{t('editor.title')}</h1>
-            <p className="text-text-secondary text-sm mt-1">{t('editor.subtitle')}</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="secondary" size="sm" onClick={handleExport}>
-              <Download className="w-4 h-4" /> {t('editor.export')}
-            </Button>
-            <Button variant="secondary" size="sm" onClick={handleImport}>
-              <Upload className="w-4 h-4" /> {t('editor.import')}
-            </Button>
-            <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileUpload} className="hidden" />
-            <Button onClick={openCreate}>
-              <Plus className="w-4 h-4" /> {t('editor.new')}
-            </Button>
-          </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+      className="max-w-5xl mx-auto"
+    >
+      <div className="flex items-start justify-between mb-8">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-white via-keef-400 to-pink-400 bg-clip-text text-transparent">
+            {t('editor.title')}
+          </h1>
+          <p className="text-text-secondary text-sm flex items-center gap-2">
+            <LayoutList className="w-3.5 h-3.5 text-keef-400" />
+            {links.length} links · {activeCount} activos · {totalClicks} clicks
+          </p>
         </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button variant="secondary" size="sm" onClick={handleExport}>
+            <Download className="w-4 h-4" />
+            {t('editor.export')}
+          </Button>
+          <Button variant="secondary" size="sm" onClick={handleImport}>
+            <Upload className="w-4 h-4" />
+            {t('editor.import')}
+          </Button>
+          <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileUpload} className="hidden" />
+          <Button onClick={openCreate}>
+            <Plus className="w-4 h-4" />
+            {t('editor.new')}
+          </Button>
+        </div>
+      </div>
 
-        {links.length === 0 ? (
-          <Card>
-            <div className="text-center py-12">
-              <Globe className="w-12 h-12 text-text-secondary mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">{t('editor.empty.title')}</h3>
-              <p className="text-text-secondary text-sm mb-4">{t('editor.empty.description')}</p>
-              <Button onClick={openCreate}>{t('editor.empty.action')}</Button>
+      {links.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1, type: 'spring', stiffness: 200, damping: 20 }}
+        >
+          <Card variant="glass" className="text-center py-16 px-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-keef-500/20 to-purple-600/20 mb-4">
+              <Globe className="w-8 h-8 text-keef-400" />
             </div>
+            <h3 className="text-xl font-semibold mb-2">{t('editor.empty.title')}</h3>
+            <p className="text-text-secondary text-sm mb-6 max-w-sm mx-auto">{t('editor.empty.description')}</p>
+            <Button onClick={openCreate} size="lg">
+              <Plus className="w-4 h-4" />
+              {t('editor.empty.action')}
+            </Button>
           </Card>
-        ) : (
-          <div className="space-y-4">
-            {Object.entries(groupedLinks).map(([cat, catLinks]) => (
-              <div key={cat}>
-                {cat !== '__default__' && (
-                  <div className="flex items-center gap-2 mb-2 mt-4">
-                    <Tag className="w-4 h-4 text-text-secondary" />
-                    <span className="text-sm font-medium text-text-secondary">{cat}</span>
-                    <Badge variant="default">{catLinks.length}</Badge>
-                  </div>
+        </motion.div>
+      ) : (
+        <div className="space-y-6">
+          {Object.entries(groupedLinks).map(([cat, catLinks], groupIdx) => (
+            <motion.div
+              key={cat}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: groupIdx * 0.05, type: 'spring', stiffness: 200, damping: 20 }}
+            >
+              <div className="flex items-center gap-2 mb-3 px-1">
+                {cat !== '__default__' ? (
+                  <>
+                    <Tag className="w-4 h-4 text-keef-400" />
+                    <span className="text-sm font-semibold text-text-secondary uppercase tracking-wider">{cat}</span>
+                    <Badge variant="default" className="text-[10px] px-1.5 py-0">{catLinks.length}</Badge>
+                  </>
+                ) : (
+                  <>
+                    <Link2 className="w-4 h-4 text-keef-400" />
+                    <span className="text-sm font-semibold text-text-secondary uppercase tracking-wider">Sin categoría</span>
+                    <Badge variant="default" className="text-[10px] px-1.5 py-0">{catLinks.length}</Badge>
+                  </>
                 )}
-                <div className="space-y-2">
-                  {catLinks.map((link, index) => (
-                    <motion.div
-                      key={link.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.03 }}
-                      draggable
-                      onDragStart={() => handleDragStart(links.indexOf(link))}
-                      onDragOver={(e) => handleDragOver(e, links.indexOf(link))}
-                      onDragEnd={handleDragEnd}
-                      className={`bg-surface-2 border border-border rounded-xl p-3 flex items-center gap-2 transition-all duration-200 hover:border-keef-500/30 ${dragIndex === links.indexOf(link) ? 'opacity-50 border-keef-500' : ''}`}
-                    >
-                      <div className="cursor-grab active:cursor-grabbing text-text-secondary hover:text-white transition-colors">
-                        <GripVertical className="w-4 h-4" />
-                      </div>
-                      <span className="text-base shrink-0">{iconMap[link.icon] || '🌐'}</span>
-                      {link.thumbnail_url && (
-                        <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-surface-3">
-                          <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium truncate">{link.title}</span>
-                          <span className={`w-2 h-2 rounded-full shrink-0 ${link.is_active ? 'bg-success' : 'bg-text-secondary'}`} />
-                          {link.category && (
-                            <span className="text-[10px] text-text-secondary bg-surface-3 px-1.5 py-0.5 rounded shrink-0">{link.category}</span>
-                          )}
-                          {link.preview && (
-                            <span className="shrink-0 text-keef-400" title="Preview disponible"><Eye className="w-3 h-3 inline" /></span>
-                          )}
-                          {link.pixels && (
-                            <span className="shrink-0 text-amber-400" title="Tracking configurado"><Target className="w-3 h-3 inline" /></span>
-                          )}
-                        </div>
-                        <p className="text-xs text-text-secondary truncate mt-0.5">{link.url}</p>
-                      </div>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <span className="text-xs text-text-secondary mr-1">{link.clicks} clicks</span>
-                        <button onClick={() => handleToggle(link)} className="p-1.5 hover:bg-surface-3 rounded-lg transition-colors text-[10px] text-text-secondary">
-                          {link.is_active ? 'ON' : 'OFF'}
-                        </button>
-                        <button onClick={() => openEdit(link)} className="p-2 hover:bg-surface-3 rounded-lg transition-colors">
-                          <Pencil className="w-4 h-4 text-text-secondary" />
-                        </button>
-                        <button onClick={() => handleDelete(link.id)} className="p-2 hover:bg-error/10 rounded-lg transition-colors">
-                          <Trash2 className="w-4 h-4 text-error" />
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
               </div>
-            ))}
-          </div>
-        )}
-      </motion.div>
+              <div className="space-y-2">
+                {catLinks.map((link, index) => (
+                  <motion.div
+                    key={link.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.02 }}
+                    draggable
+                    onDragStart={() => handleDragStart(links.indexOf(link))}
+                    onDragOver={(e) => handleDragOver(e, links.indexOf(link))}
+                    onDragEnd={handleDragEnd}
+                    className={cn(
+                      'relative group rounded-2xl border bg-surface-2/60 backdrop-blur-sm p-4 flex items-center gap-3 transition-all duration-200',
+                      dragIndex === links.indexOf(link) ? 'border-keef-500 opacity-60 shadow-lg shadow-keef-500/10' : 'border-white/5 hover:border-keef-500/25 hover:shadow-md hover:shadow-keef-500/5'
+                    )}
+                  >
+                    <div className="cursor-grab active:cursor-grabbing text-text-secondary hover:text-white transition-colors p-1 -ml-1">
+                      <GripVertical className="w-4 h-4" />
+                    </div>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingLink ? t('editor.edit.title') : t('editor.create.title')}>
-        <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
-          <Input id="link-title" label={t('editor.form.title')} placeholder={t('editor.form.titlePlaceholder')} value={title} onChange={(e) => setTitle(e.target.value)} />
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-surface-3 to-surface-3/80 flex items-center justify-center text-lg shrink-0 border border-white/5">
+                      {iconMap[link.icon] || '🌐'}
+                    </div>
+
+                    {link.thumbnail_url && (
+                      <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-surface-3 border border-white/5">
+                        <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                      </div>
+                    )}
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className={cn('text-sm font-semibold truncate max-w-[200px]', link.featured && 'text-keef-300')}>
+                          {link.title}
+                        </span>
+                        <StatusDot active={link.is_active} />
+                        {link.category && (
+                          <span className="text-[10px] text-text-secondary bg-surface-3 px-2 py-0.5 rounded-full border border-white/5 shrink-0">{link.category}</span>
+                        )}
+                        {link.featured && (
+                          <span className="text-[10px] text-keef-400 bg-keef-500/10 px-2 py-0.5 rounded-full border border-keef-500/20 shrink-0">Destacado</span>
+                        )}
+                        {link.preview && (
+                          <span className="text-keef-400/60" title="Preview disponible"><Eye className="w-3 h-3" /></span>
+                        )}
+                        {link.pixels && (
+                          <span className="text-amber-400/60" title="Tracking configurado"><Target className="w-3 h-3" /></span>
+                        )}
+                        {link.affiliate?.enabled && (
+                          <span className="text-green-400/60" title="Afiliado"><DollarSign className="w-3 h-3" /></span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs text-text-secondary truncate">{getDomainFromUrl(link.url)}</span>
+                        <span className="text-[10px] text-text-secondary/50">·</span>
+                        <span className="text-[10px] text-text-secondary/70">{link.clicks} clicks</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <Toggle checked={link.is_active} onChange={() => handleToggle(link)} />
+                      <button onClick={() => openEdit(link)}
+                        className="p-2 hover:bg-keef-500/10 rounded-xl transition-colors group/edit"
+                      >
+                        <Pencil className="w-4 h-4 text-text-secondary group-hover/edit:text-keef-400 transition-colors" />
+                      </button>
+                      <button onClick={() => handleDelete(link.id)}
+                        className="p-2 hover:bg-error/10 rounded-xl transition-colors group/del"
+                      >
+                        <Trash2 className="w-4 h-4 text-error/70 group-hover/del:text-error transition-colors" />
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={editingLink ? t('editor.edit.title') : t('editor.create.title')}
+        size="lg"
+      >
+        <div className="space-y-5">
+          <Input
+            id="link-title"
+            label={t('editor.form.title')}
+            placeholder={t('editor.form.titlePlaceholder')}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
           <div className="relative">
-            <Input id="link-url" label={t('editor.form.url')} placeholder={t('editor.form.urlPlaceholder')} value={url}
+            <Input
+              id="link-url"
+              label={t('editor.form.url')}
+              placeholder={t('editor.form.urlPlaceholder')}
+              value={url}
               onChange={(e) => setUrl(e.target.value)}
               onBlur={handleUrlBlur}
             />
             {isUnfurling && (
-              <div className="absolute right-3 top-8">
+              <div className="absolute right-3 top-[42px]">
                 <div className="w-4 h-4 border-2 border-keef-500 border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
 
           {preview && (
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-3 border border-border">
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-3/60 border border-white/5">
               {preview.image && (
                 <img src={preview.image} alt="" className="w-14 h-14 rounded-lg object-cover shrink-0"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
@@ -390,8 +489,11 @@ export function EditorPage() {
             <label className="block text-sm font-medium text-text-secondary">{t('editor.form.icon')}</label>
             <div className="flex flex-wrap gap-1.5">
               {linkIcons.map((ic) => (
-                <button key={ic} onClick={() => setIcon(ic)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-all text-base ${icon === ic ? 'border-keef-500 bg-keef-500/10 scale-110' : 'border-border hover:border-keef-500/50'}`}
+                <button key={ic} onClick={() => setIcon(ic as LinkIcon)}
+                  className={cn(
+                    'w-8 h-8 flex items-center justify-center rounded-lg border transition-all text-base',
+                    icon === ic ? 'border-keef-500 bg-keef-500/10 scale-110 shadow-sm shadow-keef-500/20' : 'border-border hover:border-keef-500/50'
+                  )}
                   title={ic}>
                   {iconMap[ic] || '🌐'}
                 </button>
@@ -399,9 +501,15 @@ export function EditorPage() {
             </div>
           </div>
 
-          <Input id="link-category" label="Categoría" placeholder="ej: redes, trabajo, proyectos" value={category} onChange={(e) => setCategory(e.target.value)} />
+          <Input
+            id="link-category"
+            label={t('editor.form.category')}
+            placeholder={t('editor.form.categoryPlaceholder') || 'redes, trabajo, proyectos'}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
 
-          <label className="flex items-center gap-3 p-3 bg-surface-3 rounded-xl cursor-pointer">
+          <label className="flex items-center gap-3 p-3 bg-surface-3/60 rounded-xl cursor-pointer border border-white/5 hover:border-keef-500/20 transition-colors">
             <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)}
               className="w-4 h-4 rounded border-border accent-keef-500" />
             <div>
@@ -411,11 +519,17 @@ export function EditorPage() {
           </label>
 
           <div className="grid grid-cols-2 gap-3">
-            <Input id="link-scheduled-start" label="Inicio programado" type="date" value={scheduledStart} onChange={(e) => setScheduledStart(e.target.value)} />
-            <Input id="link-scheduled-end" label="Fin programado" type="date" value={scheduledEnd} onChange={(e) => setScheduledEnd(e.target.value)} />
+            <Input id="link-scheduled-start" label={t('editor.form.scheduledStart')} type="date" value={scheduledStart} onChange={(e) => setScheduledStart(e.target.value)} />
+            <Input id="link-scheduled-end" label={t('editor.form.scheduledEnd')} type="date" value={scheduledEnd} onChange={(e) => setScheduledEnd(e.target.value)} />
           </div>
 
-          <Input id="link-thumbnail" label="URL de miniatura" placeholder="https://..." value={thumbnailUrl} onChange={(e) => setThumbnailUrl(e.target.value)} />
+          <Input
+            id="link-thumbnail"
+            label={t('editor.form.thumbnailUrl')}
+            placeholder="https://..."
+            value={thumbnailUrl}
+            onChange={(e) => setThumbnailUrl(e.target.value)}
+          />
 
           <button onClick={() => setShowAdvanced(!showAdvanced)}
             className="flex items-center gap-2 text-sm text-text-secondary hover:text-white transition-colors"
@@ -425,7 +539,7 @@ export function EditorPage() {
           </button>
 
           {showAdvanced && (
-            <div className="space-y-4 pl-2 border-l-2 border-keef-500/30">
+            <div className="space-y-4 pl-3 border-l-2 border-keef-500/30">
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Target className="w-4 h-4 text-amber-400" />
@@ -462,7 +576,7 @@ export function EditorPage() {
                   Generar QR
                 </Button>
                 {qrUrl && (
-                  <div className="mt-2 p-3 bg-surface-3 rounded-xl flex items-center gap-3">
+                  <div className="mt-2 p-3 bg-surface-3/60 rounded-xl flex items-center gap-3 border border-white/5">
                     <img src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrUrl)}`} alt="QR" className="w-16 h-16 rounded-lg" />
                     <div className="text-xs text-text-secondary">
                       <p className="font-medium text-white mb-1">QR generado</p>
@@ -479,6 +593,6 @@ export function EditorPage() {
           </Button>
         </div>
       </Modal>
-    </div>
+    </motion.div>
   )
 }

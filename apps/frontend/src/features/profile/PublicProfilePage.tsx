@@ -91,7 +91,7 @@ function Error404({ error, t }: { error: string; t: (key: any) => string }) {
           initial={{ scale: 0, rotate: -10 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: 'spring', damping: 12, stiffness: 150 }}
-          className="text-9xl font-black gradient-text mb-4"
+          className="text-9xl font-black bg-gradient-to-r from-keef-400 via-pink-400 to-keef-400 bg-clip-text text-transparent mb-4"
         >
           404
         </motion.h1>
@@ -107,7 +107,7 @@ function Error404({ error, t }: { error: string; t: (key: any) => string }) {
           </div>
           <motion.a
             href="/"
-            whileHover={{ scale: 1.05, gap: '12px' }}
+            whileHover={{ scale: 1.05 }}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-keef-500/10 border border-keef-500/30 text-keef-400 font-medium text-sm transition-all hover:bg-keef-500/20"
           >
             {t('profile.404.back')} <ArrowUpRight className="w-4 h-4" />
@@ -159,7 +159,7 @@ function MediaBackground({ theme, muted }: { theme: any; muted: boolean }) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent pointer-events-none"
+            className="absolute inset-0 pointer-events-none"
             style={{ opacity: (theme.overlay_opacity ?? 40) / 100, background: `linear-gradient(180deg, transparent, ${theme.overlay_color || '#000000'}60)` }}
           />
         )}
@@ -893,7 +893,7 @@ export function PublicProfilePage() {
             <div className="grid grid-cols-2 gap-2 w-full">
               {imageArray.map((url, i) => (
                 <div key={i} className="aspect-square rounded-xl overflow-hidden" style={{ border: `1px solid ${theme.text_color}10` }}>
-                  <img src={url} alt="" className="w-full h-full object-cover" />
+                  <img src={url} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
                 </div>
               ))}
             </div>
@@ -990,10 +990,8 @@ export function PublicProfilePage() {
         color: theme.text_color,
       }}
     >
-      {/* Media Background */}
       {(isVideo || isImage) && <MediaBackground theme={theme} muted={muted} />}
 
-      {/* Gradient Fallback for video/image backgrounds */}
       {(isVideo || isImage) && (
         <div
           className="absolute inset-0"
@@ -1001,14 +999,12 @@ export function PublicProfilePage() {
         />
       )}
 
-      {/* Music */}
       {theme.background_music_url && (
         <audio ref={audioRef} autoPlay loop playsInline hidden>
           <source src={theme.background_music_url} />
         </audio>
       )}
 
-      {/* Volume Controller */}
       {hasMedia && (
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.9 }}
@@ -1076,10 +1072,8 @@ export function PublicProfilePage() {
         </motion.div>
       )}
 
-      {/* Particles */}
       {theme.show_particles && <ParticleField count={isPremium ? 40 : 20} accent={theme.accent_color} />}
 
-      {/* Corner decorations */}
       {theme.corner_decoration !== 'none' && (
         <div className="absolute inset-0 pointer-events-none z-0">
           {theme.corner_decoration === 'dots' && (
@@ -1113,7 +1107,6 @@ export function PublicProfilePage() {
         </div>
       )}
 
-      {/* Presentation Mode */}
       {presentationActive && (
         <PresentationMode
           blocks={activeBlocks}
@@ -1123,7 +1116,6 @@ export function PublicProfilePage() {
         />
       )}
 
-      {/* Main Content */}
       <motion.div
         initial={{ opacity: theme.entrance_animation === 'none' ? 1 : theme.entrance_animation === 'slide-up' ? 0 : theme.entrance_animation === 'zoom' ? 0 : 0,
                    y: theme.entrance_animation === 'slide-up' ? 40 : 0,
@@ -1133,7 +1125,6 @@ export function PublicProfilePage() {
         className="w-full max-w-md mx-auto flex flex-col items-center gap-5 relative z-10 py-8 sm:py-12"
       >
         <div style={{ display: theme.profile_password && !(window as any).__profileUnlocked ? 'none' : '' }}>
-        {/* Password Gate */}
         {theme.profile_password && !(window as any).__profileUnlocked && (
           <div className="w-full flex flex-col items-center gap-4 p-8">
             <div className="w-16 h-16 rounded-2xl bg-keef-500/10 flex items-center justify-center">
@@ -1156,7 +1147,6 @@ export function PublicProfilePage() {
 
         {hasBlocks ? (
           <>
-            {/* Share + QR */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1222,7 +1212,6 @@ END:VCARD`
               </motion.button>
             </motion.div>
 
-            {/* QR Panel */}
             <AnimatePresence>
               {showQR && (
                 <motion.div
@@ -1246,7 +1235,6 @@ END:VCARD`
               )}
             </AnimatePresence>
 
-            {/* Badges */}
             {profile.badges && profile.badges.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -1273,14 +1261,12 @@ END:VCARD`
               </motion.div>
             )}
 
-            {/* Blocks */}
             {activeBlocks.map((block) => (
               <div key={block.id} className="w-full">
                 {renderBlockContent(block)}
               </div>
             ))}
 
-            {/* Lead Form */}
             {theme.lead_form_enabled && (
               <motion.form
                 initial={{ opacity: 0, y: 10 }}
@@ -1314,7 +1300,6 @@ END:VCARD`
               </motion.form>
             )}
 
-            {/* Stats Bar */}
             {theme.show_stats && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -1355,7 +1340,6 @@ END:VCARD`
               </motion.div>
             )}
 
-            {/* Brand Footer */}
             {theme.show_brand_footer && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -1398,7 +1382,6 @@ END:VCARD`
           </>
         ) : (
           <>
-            {/* Avatar */}
             {theme.show_avatar && (
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
@@ -1406,7 +1389,6 @@ END:VCARD`
                 transition={{ type: 'spring', damping: 15, stiffness: 200, delay: 0.1 }}
                 className="relative group"
               >
-                {/* Glow ring */}
                 <motion.div
                   className="absolute inset-0 rounded-full"
                   animate={{
@@ -1418,7 +1400,6 @@ END:VCARD`
                   }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 />
-                {/* Avatar container */}
                 <div
                   className={`rounded-full overflow-hidden relative ${theme.avatar_size === 'lg' ? 'w-28 h-28' : theme.avatar_size === 'sm' ? 'w-16 h-16' : 'w-24 h-24'}`}
                   style={{
@@ -1455,7 +1436,6 @@ END:VCARD`
                       {(profile.display_name || username || '?')[0]?.toUpperCase()}
                     </div>
                   )}
-                  {/* Premium badge */}
                   {isPremium && (
                     <motion.div
                       className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
@@ -1474,7 +1454,6 @@ END:VCARD`
               </motion.div>
             )}
 
-            {/* Info */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1544,7 +1523,6 @@ END:VCARD`
               )}
             </motion.div>
 
-            {/* Share + QR */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1610,7 +1588,6 @@ END:VCARD`
               </motion.button>
             </motion.div>
 
-            {/* QR Panel */}
             <AnimatePresence>
               {showQR && (
                 <motion.div
@@ -1634,7 +1611,6 @@ END:VCARD`
               )}
             </AnimatePresence>
 
-            {/* Badges */}
             {profile.badges && profile.badges.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -1661,7 +1637,6 @@ END:VCARD`
               </motion.div>
             )}
 
-            {/* Links */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1749,7 +1724,6 @@ END:VCARD`
               })}
             </motion.div>
 
-            {/* Lead Form */}
             {theme.lead_form_enabled && (
               <motion.form
                 initial={{ opacity: 0, y: 10 }}
@@ -1783,7 +1757,6 @@ END:VCARD`
               </motion.form>
             )}
 
-            {/* Stats Bar */}
             {theme.show_stats && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -1824,7 +1797,6 @@ END:VCARD`
               </motion.div>
             )}
 
-            {/* Brand Footer */}
             {theme.show_brand_footer && (
               <motion.div
                 initial={{ opacity: 0 }}

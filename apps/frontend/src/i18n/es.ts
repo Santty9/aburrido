@@ -28,6 +28,8 @@ export const es = {
   'nav.register': 'Crear Cuenta',
   'nav.logout': 'Cerrar Sesión',
   'nav.language': 'Idioma',
+  'nav.tagline': 'tu espacio, tu estilo',
+  'nav.settings': 'Ajustes',
 
   // Sidebar
   'sidebar.dashboard': 'Dashboard',

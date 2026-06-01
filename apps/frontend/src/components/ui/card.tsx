@@ -1,11 +1,23 @@
 import type { HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
-export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+const variantStyles = {
+  default: 'bg-surface-2 border border-border',
+  glass: 'glass-card',
+  elevated: 'bg-surface-2 border border-border shadow-lg shadow-black/20',
+  outline: 'bg-transparent border border-border',
+}
+
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  variant?: keyof typeof variantStyles
+}
+
+export function Card({ className, variant = 'default', ...props }: CardProps) {
   return (
     <div
       className={cn(
-        'bg-surface-2 border border-border rounded-2xl p-6 transition-all duration-200',
+        'rounded-2xl p-6 transition-all duration-300 hover:border-keef-500/20',
+        variantStyles[variant],
         className
       )}
       {...props}
@@ -18,9 +30,9 @@ export function CardHeader({ className, ...props }: HTMLAttributes<HTMLDivElemen
 }
 
 export function CardTitle({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn('text-lg font-semibold', className)} {...props} />
+  return <h3 className={cn('text-lg font-semibold tracking-tight', className)} {...props} />
 }
 
 export function CardDescription({ className, ...props }: HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-sm text-text-secondary', className)} {...props} />
+  return <p className={cn('text-sm text-text-secondary leading-relaxed', className)} {...props} />
 }
